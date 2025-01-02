@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=app/main.py
+      - SECRET_KEY=${SECRET_KEY}
+      - UPLOAD_FOLDER=/app/uploads
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:5000/api
+    restart: unless-stopped
+
+volumes:
+  node_modules:
