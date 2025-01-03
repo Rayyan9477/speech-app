@@ -1,4 +1,4 @@
-# backend/app/main.py
+# backend/app/app.py
 from flask import Flask
 from flask_cors import CORS
 from .api.routes import api_bp

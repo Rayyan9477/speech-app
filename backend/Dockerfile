@@ -17,8 +17,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Set environment variables
-ENV FLASK_APP=app/main.py
+ENV FLASK_APP=app/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
 # Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app.main:create_app()"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app.app:create_app()"]

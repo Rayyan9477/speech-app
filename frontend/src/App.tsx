@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -10,9 +10,9 @@ const App: React.FC = () => {
       <div className="flex flex-col min-h-screen bg-gray-100">
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8">
-          <Switch>
-            <Route exact path="/" component={Home} />
-          </Switch>
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
         </main>
         <Footer />
       </div>
@@ -21,4 +21,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
