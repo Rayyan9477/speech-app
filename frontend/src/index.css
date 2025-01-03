@@ -1,0 +1,238 @@
+/* Import Tailwind CSS directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables for Tailwind Configuration */
+:root {
+  --border: 240, 24%, 48%;
+  --input: 240, 24%, 48%;
+  --ring: 240, 24%, 48%;
+  --background: 0, 0%, 100%;
+  --foreground: 240, 20%, 8%;
+  
+  --primary: 217, 100%, 51%;
+  --primary-foreground: 0, 0%, 100%;
+  
+  --secondary: 240, 60%, 50%;
+  --secondary-foreground: 0, 0%, 100%;
+  
+  --destructive: 0, 84%, 67%;
+  --destructive-foreground: 0, 0%, 100%;
+  
+  --muted: 240, 5%, 90%;
+  --muted-foreground: 240, 3%, 25%;
+  
+  --accent: 138, 80%, 50%;
+  --accent-foreground: 0, 0%, 100%;
+  
+  --popover: 0, 0%, 100%;
+  --popover-foreground: 240, 20%, 8%;
+  
+  --card: 0, 0%, 100%;
+  --card-foreground: 240, 20%, 8%;
+  
+  /* Radius Variables */
+  --radius: 0.5rem; /* Adjust as needed */
+}
+
+/* Dark Mode Overrides */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --border: 240, 24%, 30%;
+    --input: 240, 24%, 30%;
+    --ring: 240, 24%, 30%;
+    --background: 240, 5%, 10%;
+    --foreground: 0, 0%, 95%;
+    
+    --primary: 217, 100%, 72%;
+    --primary-foreground: 0, 0%, 10%;
+    
+    --secondary: 240, 60%, 70%;
+    --secondary-foreground: 0, 0%, 10%;
+    
+    --destructive: 0, 84%, 57%;
+    --destructive-foreground: 0, 0%, 10%;
+    
+    --muted: 240, 5%, 15%;
+    --muted-foreground: 240, 3%, 85%;
+    
+    --accent: 138, 80%, 60%;
+    --accent-foreground: 0, 0%, 10%;
+    
+    --popover: 240, 5%, 15%;
+    --popover-foreground: 0, 0%, 95%;
+    
+    --card: 240, 5%, 15%;
+    --card-foreground: 0, 0%, 95%;
+  }
+}
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--primary));
+  border-radius: var(--radius);
+  border: 2px solid hsl(var(--popover));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--secondary));
+}
+
+/* Utility Classes for Animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+/* Custom Button Styles (if not fully handled by Tailwind) */
+button {
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+/* Ensure smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Additional Custom Styles */
+
+body {
+  @apply bg-background text-foreground;
+}
+
+a {
+  @apply text-primary hover:text-secondary;
+}
+
+button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Card Component Styles */
+.card {
+  @apply bg-card foreground-card rounded-lg shadow-md;
+}
+
+/* Input Styles */
+input, textarea, select {
+  @apply border border-border bg-input foreground-input rounded-md p-2;
+}
+
+input:focus, textarea:focus, select:focus {
+  @apply ring ring-ring outline-none;
+}
+
+/* Utility Classes for Spacing and Layout */
+.container {
+  @apply mx-auto px-4;
+}
+
+.flex {
+  @apply flex;
+}
+
+.flex-col {
+  @apply flex-col;
+}
+
+.flex-grow {
+  @apply flex-grow;
+}
+
+.justify-between {
+  @apply justify-between;
+}
+
+.items-center {
+  @apply items-center;
+}
+
+.space-x-4 > :not(:last-child) {
+  @apply mr-4;
+}
+
+.space-y-4 > :not(:last-child) {
+  @apply mb-4;
+}
+
+/* Specific Component Overrides */
+
+/* Example: Custom Slider Styles */
+.slider {
+  @apply w-full h-2 bg-muted rounded-full;
+}
+
+.slider::-webkit-slider-thumb {
+  @apply w-4 h-4 bg-primary rounded-full cursor-pointer;
+  -webkit-appearance: none;
+  margin-top: -1px; /* Centers the thumb vertically */
+}
+
+.slider:focus::-webkit-slider-thumb {
+  @apply ring ring-ring;
+}
+
+/* Example: Custom Select Styles */
+.select {
+  @apply relative w-full bg-input border border-border rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm;
+}
+
+.select:focus {
+  @apply ring-1 ring-primary;
+}
+
+/* Example: Custom Button Styles */
+.button {
+  @apply inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+}
+
+.button-outline {
+  @apply inline-flex justify-center items-center px-4 py-2 border border-primary text-sm font-medium rounded-md shadow-sm text-primary bg-transparent hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+}
+
+/* Progress Bar Styles */
+.progress {
+  @apply w-full bg-muted rounded-full h-2;
+}
+
+.progress-bar {
+  @apply bg-primary h-2 rounded-full transition-width;
+}
+
+/* Media Queries for Responsive Design */
+@media (min-width: 768px) {
+  .container {
+    @apply px-6;
+  }
+}

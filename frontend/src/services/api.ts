@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://backend:5000/api';
 
 export const transcribe = async (file: File): Promise<{ transcription: string }> => {
   const formData = new FormData();
@@ -47,4 +47,3 @@ export const synthesize = async (text: string, language: string): Promise<{ audi
 
   return response.json();
 };
-

@@ -59,3 +59,7 @@ def translate():
     except Exception as e:
         current_app.logger.error(f"Translation error: {str(e)}")
         return jsonify({'error': 'Translation failed'}), 500
+
+@app.route('/health')
+def health_check():
+    return jsonify({"status": "healthy"}), 200
