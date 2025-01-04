@@ -21,4 +21,4 @@ ENV FLASK_APP=app/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
 # Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app.app:create_app()"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "backend.app.app:create_app()"]
