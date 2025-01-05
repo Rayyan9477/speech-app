@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = '/api';  // Use relative path
 
 export const transcribe = async (file: File): Promise<{ transcription: string }> => {
   const formData = new FormData();

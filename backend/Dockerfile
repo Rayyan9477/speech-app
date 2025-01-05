@@ -17,8 +17,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Set environment variables
-ENV FLASK_APP=app/app.py
-ENV FLASK_RUN_HOST=0.0.0.0
+ENV UVICORN_APP=app.app:app
+ENV UVICORN_HOST=0.0.0.0
+ENV UVICORN_PORT=5000
 
 # Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "backend.app.app:create_app()"]
+CMD ["uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "5000"]

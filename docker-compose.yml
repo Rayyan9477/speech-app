@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   backend:
     build: ./backend
@@ -6,10 +7,9 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - FLASK_ENV=production
-      - FLASK_APP=app/app.py
-      - SECRET_KEY=${SECRET_KEY}
-      - UPLOAD_FOLDER=/app/uploads
+      - UVICORN_APP=app.app:app
+      - UVICORN_HOST=0.0.0.0
+      - UVICORN_PORT=5000
     restart: unless-stopped
 
   frontend:

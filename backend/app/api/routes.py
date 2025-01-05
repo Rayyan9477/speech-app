@@ -1,10 +1,10 @@
 # backend/app/api/routes.py
 from flask import Blueprint, request, jsonify, current_app
 from werkzeug.utils import secure_filename
-from models.speech_to_text import transcribe_audio
-from models.text_to_speech import generate_speech
-from models.translator import translate_text
-from utils.file_handler import save_uploaded_file, get_file_path, allowed_file, cleanup_old_files
+from ..models.speech_to_text import transcribe_audio
+from ..models.text_to_speech import generate_speech
+from ..models.translator import translate_text
+from ..utils.file_handler import save_uploaded_file, get_file_path, allowed_file, cleanup_old_files
 import os
 
 api_bp = Blueprint('api', __name__)
