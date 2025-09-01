@@ -1,49 +1,40 @@
-const API_BASE_URL = '/api';  // Use relative path
+// Legacy API service - migrated to use new API client
+import { apiClient } from '../api/client';
+import type { TranscriptionResponse, SynthesisResponse, TranslationResponse } from '../api/client';
 
+// Backward compatibility wrappers for existing components
 export const transcribe = async (file: File): Promise<{ transcription: string }> => {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  const response = await fetch(`${API_BASE_URL}/transcribe`, {
-    method: 'POST',
-    body: formData,
-  });
-
-  if (!response.ok) {
-    throw new Error('Transcription failed');
-  }
-
-  return response.json();
+  const response = await apiClient.transcribeAudio(file);
+  return { transcription: response.transcription };
 };
 
 export const translate = async (text: string, targetLanguage: string): Promise<{ translated_text: string }> => {
-  const response = await fetch(`${API_BASE_URL}/translate`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ text, target_language: targetLanguage }),
-  });
-
-  if (!response.ok) {
-    throw new Error('Translation failed');
+  // Try to detect source language first, fallback to 'auto'
+  let sourceLanguage = 'en'; // Default assumption
+  try {
+    const detected = await apiClient.detectTextLanguage(text);
+    sourceLanguage = detected.detected_language;
+  } catch (e) {
+    console.warn('Language detection failed, using default source language');
   }
-
-  return response.json();
+  
+  const response = await apiClient.translateText(text, sourceLanguage, targetLanguage);
+  return { translated_text: response.translated_text };
 };
 
 export const synthesize = async (text: string, language: string): Promise<{ audio_url: string }> => {
-  const response = await fetch(`${API_BASE_URL}/synthesize`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ text, language }),
-  });
+  const response = await apiClient.synthesizeSpeech(text, language);
+  // Convert new API response format to old format expected by components
+  const audioUrl = apiClient.getAudioFile(response.filename);
+  return { audio_url: audioUrl };
+};
 
-  if (!response.ok) {
-    throw new Error('Speech synthesis failed');
-  }
+// Export new API client for enhanced functionality
+export { apiClient };
 
-  return response.json();
+// Re-export types for convenience
+export type {
+  TranscriptionResponse,
+  SynthesisResponse,
+  TranslationResponse
 };

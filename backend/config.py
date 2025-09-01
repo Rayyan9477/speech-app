@@ -1,8 +1,19 @@
-# backend/config.py
-import os
+# Legacy config file - replaced by app/core/config.py
+# This file is kept for compatibility but all configuration 
+# should now use the new settings system in app/core/config.py
 
+import warnings
+warnings.warn(
+    "backend/config.py is deprecated. Use app.core.config.settings instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
+
+from app.core.config import settings
+
+# Backward compatibility aliases
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
-    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or 'uploads'
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max upload size
-    ALLOWED_EXTENSIONS = {'wav', 'mp3', 'ogg'}
+    SECRET_KEY = settings.SECRET_KEY
+    UPLOAD_FOLDER = settings.UPLOAD_FOLDER
+    MAX_CONTENT_LENGTH = settings.MAX_UPLOAD_SIZE
+    ALLOWED_EXTENSIONS = settings.ALLOWED_AUDIO_EXTENSIONS

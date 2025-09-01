@@ -1,26 +1,61 @@
 version: '3.8'
+
 services:
   backend:
-    build: ./backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "8000:8000"
     volumes:
-      - ./backend:/app
+      - ./backend/uploads:/app/uploads
+      - ./backend/audio_outputs:/app/audio_outputs
+      - ./backend/models_cache:/app/models_cache
+      - ./backend/vectordb:/app/vectordb
+      - ./backend/logs:/app/logs
+      - ./backend/voice_embeddings:/app/voice_embeddings
     environment:
-      - UVICORN_APP=app.app:app
-      - UVICORN_HOST=0.0.0.0
-      - UVICORN_PORT=5000
+      - DEBUG=true
+      - LOG_LEVEL=INFO
+      - SECRET_KEY=development-secret-key
+      - ENCRYPT_AUDIO_FILES=false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     restart: unless-stopped
+    networks:
+      - app-network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NODE_ENV=development
     depends_on:
       - backend
-    environment:
-      - REACT_APP_API_BASE_URL=http://backend:5000/api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
     restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
-  node_modules:
+  uploads:
+  audio_outputs:
+  models_cache:
+  vectordb:
+  logs:
+  voice_embeddings:

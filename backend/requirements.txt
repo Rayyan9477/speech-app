@@ -1,10 +1,40 @@
-flask==2.0.1
-flask-cors==3.0.10
-gunicorn==20.1.0
-torch
-transformers
-soundfile==0.10.3.post1
-werkzeug==2.0.1
-python-dotenv==0.19.0
-fastapi
-uvicorn
+# Core FastAPI and async support
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+pydantic==2.5.0
+
+# Pydantic settings (backward compatibility)
+pydantic-settings>=2.0.0
+
+# AI/ML Models
+torch>=2.1.0
+transformers>=4.35.0
+accelerate>=0.24.0
+datasets>=2.14.0
+
+# Audio processing
+soundfile>=0.12.1
+librosa>=0.10.1
+torchaudio>=2.1.0
+
+# Database and storage
+chromadb>=0.4.18
+sqlite-utils>=3.35.0
+
+# Security and encryption
+cryptography>=41.0.0
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Development and logging
+python-dotenv>=1.0.0
+loguru>=0.7.2
+
+# HTTP client for API calls (if needed)
+httpx>=0.25.0
+aiofiles>=23.2.0
+
+# Additional dependencies
+numpy>=1.24.0
+pathlib2>=2.3.7; python_version < '3.4'
