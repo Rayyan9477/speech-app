@@ -6,6 +6,7 @@ interface SelectProps {
   onValueChange: (value: string) => void;
   children: React.ReactNode;
   className?: string;
+  id?: string;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -13,22 +14,32 @@ export const Select: React.FC<SelectProps> = ({
   onValueChange,
   children,
   className,
+  id,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onValueChange(e.target.value);
   };
 
+  const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
+  const labelId = `${selectId}-label`;
+
   return (
     <select
+      id={selectId}
       value={value}
       onChange={handleChange}
+      aria-label="Select option"
+      title="Select option"
       className={clsx(
         'block w-full bg-input border border-border text-foreground rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm',
         className
       )}
     >
-      {children}
-    </select>
+        <option value="" disabled hidden aria-hidden="true">
+          Select an option...
+        </option>
+        {children}
+      </select>
   );
 };
 

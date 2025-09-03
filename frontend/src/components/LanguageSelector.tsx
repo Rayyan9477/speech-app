@@ -4,11 +4,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 interface LanguageSelectorProps {
   selectedLanguage: string;
   onLanguageChange: (language: string) => void;
+  label?: string;
 }
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   selectedLanguage,
   onLanguageChange,
+  label = "Select Language",
 }) => {
   const languages = [
     { code: 'en', name: 'English' },
@@ -24,7 +26,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   return (
     <div className="mb-4">
       <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-1">
-        Select Language
+        {label}
       </label>
       <Select value={selectedLanguage} onValueChange={onLanguageChange}>
         <SelectTrigger className="w-full">

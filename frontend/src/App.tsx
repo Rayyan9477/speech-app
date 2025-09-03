@@ -1,32 +1,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import EnhancedHome from './pages/EnhancedHome';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './lib/theme-provider';
+import Welcome from './pages/auth/Welcome';
+import Login from './pages/auth/Login';
+import SignUp from './pages/auth/SignUp';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import OTPVerification from './pages/auth/OTPVerification';
+import MainApp from './pages/MainApp';
+import './App.css';
 
-const App: React.FC = () => {
-  // Use enhanced version if feature flag is enabled, fallback to original
-  const useEnhancedUI = import.meta.env.VITE_USE_ENHANCED_UI !== 'false';
-
+function App() {
   return (
-    <AuthProvider>
+    <ThemeProvider defaultTheme="light" storageKey="voicify-theme">
       <Router>
-        <div className="flex flex-col min-h-screen bg-gray-50">
-          <Header />
-          <main className="flex-grow container mx-auto px-4 py-8">
-            <Routes>
-              <Route path="/" element={useEnhancedUI ? <EnhancedHome /> : <Home />} />
-              <Route path="/enhanced" element={<EnhancedHome />} />
-              <Route path="/classic" element={<Home />} />
-            </Routes>
-          </main>
-          <Footer />
+        <div className="App">
+          <Routes>
+            {/* Authentication Routes */}
+            <Route path="/" element={<Welcome />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/otp-verification" element={<OTPVerification />} />
+
+            {/* Main App Route */}
+            <Route path="/app/*" element={<MainApp />} />
+          </Routes>
         </div>
       </Router>
-    </AuthProvider>
+    </ThemeProvider>
   );
-};
+}
 
 export default App;

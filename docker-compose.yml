@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
@@ -29,22 +29,60 @@ services:
     networks:
       - app-network
 
-  frontend:
+  # Next.js Web Application
+  web:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
-      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NODE_ENV=production
     depends_on:
       - backend
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Development service for Next.js (with hot reload)
+  web-dev:
+    image: node:18-alpine
+    working_dir: /app
+    ports:
+      - "3001:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
-      - /app/.next
-    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NODE_ENV=development
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - backend
+    profiles:
+      - dev
+    networks:
+      - app-network
+
+  # Expo Development Server (for mobile development)
+  expo:
+    image: node:18-alpine
+    working_dir: /app
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+      - "19006:19006"
+    volumes:
+      - ./mobile:/app
+      - /app/node_modules
+    environment:
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - REACT_NATIVE_PACKAGER_HOSTNAME=host.docker.internal
+    command: sh -c "npm install && npx expo start --web"
+    profiles:
+      - mobile-dev
     networks:
       - app-network
 
