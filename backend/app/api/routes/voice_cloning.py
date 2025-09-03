@@ -1,10 +1,12 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
+from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks, Depends
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 from loguru import logger
 
 from ...services import get_voice_cloning_service, get_file_handler
 from ...database import get_database
+from ...database.user_models import User
+from ...security.auth import get_current_active_user, require_admin_or_moderator
 
 
 router = APIRouter()
@@ -47,7 +49,7 @@ class SimilarVoicesResponse(BaseModel):
 async def create_voice_clone(
     background_tasks: BackgroundTasks,
     name: str,
-    user_id: Optional[str] = None,
+    current_user: User = Depends(get_current_active_user),
     file: UploadFile = File(...)
 ):
     """
@@ -72,11 +74,11 @@ async def create_voice_clone(
         # Save audio sample
         file_info = await file_handler.save_upload_file(file, subfolder="voice_samples")
         
-        # Create voice clone
+        # Create voice clone with current user
         clone_result = voice_service.create_voice_clone(
             name=name,
             sample_audio_path=file_info["file_path"],
-            user_id=user_id
+            user_id=current_user.id
         )
         
         # Schedule cleanup of original sample (keep the processed version)
@@ -104,7 +106,10 @@ async def create_voice_clone(
 
 
 @router.post("/synthesize", response_model=VoiceSynthesisResponse)
-async def synthesize_with_cloned_voice(request: VoiceSynthesisRequest):
+async def synthesize_with_cloned_voice(
+    request: VoiceSynthesisRequest,
+    current_user: User = Depends(get_current_active_user)
+):
     """
     Synthesize speech using a cloned voice
     
@@ -148,7 +153,7 @@ async def synthesize_with_cloned_voice(request: VoiceSynthesisRequest):
 
 
 @router.get("/list")
-async def list_voice_clones(user_id: Optional[str] = None):
+async def list_voice_clones(current_user: User = Depends(get_current_active_user)):
     """
     List available voice clones
     
@@ -158,7 +163,9 @@ async def list_voice_clones(user_id: Optional[str] = None):
     voice_service = get_voice_cloning_service()
     
     try:
-        clones = voice_service.list_voice_clones(user_id=user_id)
+        # Users can only see their own clones, admins can see all
+        user_filter = None if current_user.role == "admin" else current_user.id
+        clones = voice_service.list_voice_clones(user_id=user_filter)
         
         return {
             "voice_clones": clones,
@@ -171,7 +178,11 @@ async def list_voice_clones(user_id: Optional[str] = None):
 
 
 @router.get("/similar/{clone_id}", response_model=SimilarVoicesResponse)
-async def find_similar_voices(clone_id: str, n_results: int = 5):
+async def find_similar_voices(
+    clone_id: str, 
+    n_results: int = 5,
+    current_user: User = Depends(get_current_active_user)
+):
     """
     Find voices similar to the specified clone
     
@@ -208,7 +219,10 @@ async def find_similar_voices(clone_id: str, n_results: int = 5):
 
 
 @router.delete("/{clone_id}")
-async def delete_voice_clone(clone_id: str):
+async def delete_voice_clone(
+    clone_id: str,
+    current_user: User = Depends(get_current_active_user)
+):
     """
     Delete a voice clone
     
@@ -233,7 +247,10 @@ async def delete_voice_clone(clone_id: str):
 
 
 @router.get("/{clone_id}/info")
-async def get_voice_clone_info(clone_id: str):
+async def get_voice_clone_info(
+    clone_id: str,
+    current_user: User = Depends(get_current_active_user)
+):
     """
     Get detailed information about a voice clone
     """
@@ -265,7 +282,8 @@ async def get_voice_clone_info(clone_id: str):
 @router.post("/extract-embedding")
 async def extract_voice_embedding(
     background_tasks: BackgroundTasks,
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    current_user: User = Depends(require_admin_or_moderator)
 ):
     """
     Extract voice embedding from audio sample (for analysis/testing)

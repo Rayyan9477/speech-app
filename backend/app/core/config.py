@@ -8,6 +8,7 @@ except ImportError:
 
 
 class Settings(BaseSettings):
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "case_sensitive": True}
     # Application settings
     APP_NAME: str = "AI Language Processor"
     APP_VERSION: str = "2.0.0"
@@ -18,8 +19,10 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8080"]
     
     # Security
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "your-super-secret-key-change-in-production")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
+    SECRET_KEY: str = os.getenv("SECRET_KEY", None)
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", None)
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+    ENCRYPTION_KEY: str = os.getenv("ENCRYPTION_KEY", None)
     
     # File handling
     UPLOAD_FOLDER: str = "uploads"
@@ -38,13 +41,34 @@ class Settings(BaseSettings):
     
     # Privacy and security
     ENCRYPT_AUDIO_FILES: bool = True
-    ENCRYPTION_KEY: Optional[str] = None
     LOG_LEVEL: str = "INFO"
     
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = True
+    def __post_init__(self):
+        """Validate security configuration."""
+        import secrets
+        import warnings
+        
+        # Generate secure keys if not provided
+        if not self.SECRET_KEY:
+            self.SECRET_KEY = secrets.token_urlsafe(32)
+            warnings.warn("SECRET_KEY not set, using generated key. Set SECRET_KEY environment variable for production!")
+        
+        if not self.JWT_SECRET_KEY:
+            self.JWT_SECRET_KEY = secrets.token_urlsafe(32)
+            warnings.warn("JWT_SECRET_KEY not set, using generated key. Set JWT_SECRET_KEY environment variable for production!")
+        
+        if not self.ENCRYPTION_KEY:
+            self.ENCRYPTION_KEY = secrets.token_urlsafe(32)
+            warnings.warn("ENCRYPTION_KEY not set, using generated key. Set ENCRYPTION_KEY environment variable for production!")
+        
+        # Validate key lengths
+        if len(self.SECRET_KEY) < 32:
+            raise ValueError("SECRET_KEY must be at least 32 characters long")
+        if len(self.JWT_SECRET_KEY) < 32:
+            raise ValueError("JWT_SECRET_KEY must be at least 32 characters long")
+        if len(self.ENCRYPTION_KEY) < 32:
+            raise ValueError("ENCRYPTION_KEY must be at least 32 characters long")
+    
 
 
 settings = Settings()

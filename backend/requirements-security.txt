@@ -1,0 +1,58 @@
+# Updated security dependencies for the speech app
+# Core FastAPI with security updates
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Authentication and Security
+PyJWT==2.8.0
+bcrypt==4.0.1
+cryptography==41.0.7
+python-multipart==0.0.6
+
+# User management and validation
+pydantic[email]==2.5.0
+pydantic-settings==2.0.3
+
+# Database
+SQLAlchemy==2.0.23
+alembic==1.12.1
+
+# HTTP client for secure requests
+httpx==0.25.2
+
+# Logging and monitoring
+loguru==0.7.2
+
+# File handling with security
+aiofiles==23.2.0
+
+# Rate limiting (if using Redis)
+redis==5.0.1
+hiredis==2.2.3
+
+# Vector database
+chromadb==0.4.17
+
+# Audio processing (ensure latest versions)
+librosa==0.10.1
+soundfile==0.12.1
+numpy==1.24.4
+
+# Machine Learning (updated versions)
+torch>=2.0.0,<2.2.0
+torchaudio>=2.0.0,<2.2.0
+transformers==4.35.2
+
+# Additional security utilities
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Testing dependencies
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2
+
+# Development dependencies
+black==23.11.0
+isort==5.12.0
+mypy==1.7.1

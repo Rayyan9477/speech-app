@@ -1,4 +1,5 @@
 import os
+import secrets
 from pathlib import Path
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
@@ -6,31 +7,60 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
 from typing import Optional
 from loguru import logger
+from ..core.config import settings
 
 
 class FileEncryption:
     def __init__(self, key: Optional[str] = None):
+        """Initialize encryption with secure key management."""
         if key:
-            self.key = key.encode()
+            # Use provided key for encryption
+            if isinstance(key, str):
+                key = key.encode()
+            self.master_key = key
         else:
-            self.key = self._generate_key()
+            # Use key from settings or generate a secure one
+            if settings.ENCRYPTION_KEY:
+                self.master_key = settings.ENCRYPTION_KEY.encode()
+            else:
+                raise ValueError("ENCRYPTION_KEY not configured. Set ENCRYPTION_KEY environment variable.")
         
-        self.cipher = Fernet(self._derive_key(self.key))
+        # Generate a random salt for each encryption instance
+        self.salt = self._get_or_generate_salt()
+        self.cipher = Fernet(self._derive_key(self.master_key, self.salt))
     
-    def _generate_key(self) -> bytes:
-        """Generate a new encryption key"""
-        return Fernet.generate_key()
-    
-    def _derive_key(self, password: bytes, salt: Optional[bytes] = None) -> bytes:
-        """Derive encryption key from password"""
-        if salt is None:
-            salt = b"stable_salt_for_audio_files"  # Use consistent salt for audio files
+    def _get_or_generate_salt(self) -> bytes:
+        """Get existing salt or generate a new secure salt."""
+        salt_file = Path("encryption_salt.key")
         
+        if salt_file.exists():
+            try:
+                with open(salt_file, 'rb') as f:
+                    return f.read()
+            except Exception as e:
+                logger.warning(f"Could not read existing salt: {e}")
+        
+        # Generate new secure salt
+        salt = secrets.token_bytes(32)
+        
+        try:
+            with open(salt_file, 'wb') as f:
+                f.write(salt)
+            # Set restrictive permissions
+            salt_file.chmod(0o600)
+            logger.info("Generated new encryption salt")
+        except Exception as e:
+            logger.warning(f"Could not save salt to file: {e}")
+        
+        return salt
+    
+    def _derive_key(self, password: bytes, salt: bytes) -> bytes:
+        """Derive encryption key from password with secure parameters."""
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,
-            iterations=100000,
+            iterations=400000,  # Increased iterations for better security
         )
         key = base64.urlsafe_b64encode(kdf.derive(password))
         return key
@@ -99,5 +129,9 @@ def get_encryption() -> FileEncryption:
     """Get or create global encryption instance"""
     global _encryption_instance
     if _encryption_instance is None:
-        _encryption_instance = FileEncryption()
+        try:
+            _encryption_instance = FileEncryption()
+        except ValueError as e:
+            logger.error(f"Encryption initialization failed: {e}")
+            raise
     return _encryption_instance

@@ -4,7 +4,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from dataclasses import dataclass, asdict
-from loguru import logger
+try:
+    from loguru import logger
+except ImportError:
+    import sys
+    import os
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+    from simple_logger import logger
 
 
 @dataclass

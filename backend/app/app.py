@@ -13,6 +13,11 @@ from .core.config import settings
 from .database import get_database, get_vector_store
 from .services import get_file_handler
 from .api.routes import stt_router, tts_router, translation_router, voice_cloning_router, streaming
+from .api.routes.auth import router as auth_router
+from .security.middleware import (
+    RateLimitMiddleware, SecurityHeadersMiddleware, 
+    LoggingMiddleware, AuthenticationMiddleware
+)
 
 
 # Configure logging
@@ -95,6 +100,12 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Add security middleware (order matters)
+app.add_middleware(LoggingMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(AuthenticationMiddleware)
+app.add_middleware(RateLimitMiddleware, calls=100, period=300)  # 100 requests per 5 minutes
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
@@ -129,6 +140,11 @@ app.include_router(
     streaming.router, 
     prefix=f"{settings.API_PREFIX}/stream", 
     tags=["Real-time Streaming"]
+)
+app.include_router(
+    auth_router, 
+    prefix=f"{settings.API_PREFIX}/auth", 
+    tags=["Authentication"]
 )
 
 # Mount static files for audio serving

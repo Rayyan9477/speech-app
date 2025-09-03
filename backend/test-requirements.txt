@@ -1,0 +1,36 @@
+# Testing framework and utilities
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.11.0
+pytest-cov>=4.1.0
+pytest-xdist>=3.3.0
+pytest-benchmark>=4.0.0
+
+# HTTP testing
+httpx>=0.25.0
+requests-mock>=1.11.0
+
+# FastAPI testing
+fastapi[test]>=0.104.1
+
+# Mock and fixtures
+factory-boy>=3.3.0
+faker>=19.0.0
+
+# Performance testing
+pytest-benchmark>=4.0.0
+locust>=2.16.0
+
+# Security testing  
+bandit>=1.7.5
+safety>=2.3.0
+
+# Load testing
+aiofiles>=23.2.0
+
+# WebSocket testing
+websockets>=11.0.0
+
+# Additional test utilities
+freezegun>=1.2.0
+responses>=0.23.0

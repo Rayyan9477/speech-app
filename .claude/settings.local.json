@@ -3,7 +3,24 @@
     "allow": [
       "Bash(rm:*)",
       "Bash(find:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(npm audit:*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(python:*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)",
+      "Bash(npm install)",
+      "Bash(npm run test:*)",
+      "Bash(timeout 30 npm test -- --run --reporter=verbose)",
+      "Read(R:\\/**)",
+      "Read(R:\\/**)",
+      "Read(R:\\/**)",
+      "Read(R:\\/**)",
+      "Bash(pip install:*)"
     ],
     "deny": [],
     "ask": []
