@@ -11,6 +11,7 @@ import {
   MicrophoneIcon,
   LanguageIcon,
   SparklesIcon,
+  AdjustmentsHorizontalIcon,
   ClockIcon,
   PlayIcon,
   StarIcon,
@@ -49,6 +50,22 @@ const Home = () => {
       path: '/app/voice-translate',
       gradient: 'from-green-500 to-emerald-500',
       color: 'text-green-600'
+    },
+    {
+      title: 'Voice Customizer',
+      description: 'Fine-tune voice parameters',
+      icon: AdjustmentsHorizontalIcon,
+      path: '/app/voice-customizer',
+      gradient: 'from-orange-500 to-red-500',
+      color: 'text-orange-600'
+    },
+    {
+      title: 'Voice Cloning',
+      description: 'Create your own AI voice',
+      icon: SparklesIcon,
+      path: '/app/voice-cloning',
+      gradient: 'from-pink-500 to-rose-500',
+      color: 'text-pink-600'
     }
   ];
 
@@ -129,7 +146,7 @@ const Home = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="p-6 space-y-8"
+        className="py-6 space-y-8"
       >
         {/* Header */}
         <motion.div variants={itemVariants} className="flex items-center justify-between">
@@ -146,7 +163,7 @@ const Home = () => {
         {/* Quick Actions */}
         <motion.div variants={itemVariants}>
           <h2 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {quickActions.map((action) => {
               const IconComponent = action.icon;
               return (
@@ -179,7 +196,7 @@ const Home = () => {
               View all
             </Link>
           </div>
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {featuredVoices.map((voice) => (
               <Card key={voice.name} className="p-4 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center space-x-3">
@@ -247,13 +264,13 @@ const Home = () => {
 
         {/* Usage Stats */}
         <motion.div variants={itemVariants}>
-          <Card className="p-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-            <div className="flex items-center justify-between">
+          <Card className="p-4 sm:p-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-semibold mb-1">Free Plan</h3>
                 <p className="text-purple-100 text-sm">Upgrade to unlock premium voices</p>
               </div>
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <div className="text-2xl font-bold">247</div>
                 <div className="text-sm text-purple-100">minutes left</div>
               </div>

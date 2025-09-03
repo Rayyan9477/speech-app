@@ -154,6 +154,9 @@ const OTPVerification = () => {
                   className="w-12 h-12 text-center text-xl font-semibold bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary focus:outline-none transition-colors"
                   maxLength={1}
                   required
+                  placeholder="0"
+                  aria-label={`OTP digit ${index + 1}`}
+                  title={`Enter digit ${index + 1} of verification code`}
                 />
               ))}
             </div>
