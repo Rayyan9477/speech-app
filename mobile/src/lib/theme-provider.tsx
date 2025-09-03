@@ -1,8 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme, Theme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
 
 type ThemeMode = 'light' | 'dark';
 
@@ -22,9 +20,6 @@ export function useTheme() {
   }
   return context;
 }
-
-// Create emotion cache for SSR compatibility
-const cache = createCache({ key: 'css', prepend: true });
 
 const createAppTheme = (mode: ThemeMode): Theme => createTheme({
   palette: {
@@ -61,30 +56,30 @@ const createAppTheme = (mode: ThemeMode): Theme => createTheme({
     },
   },
   typography: {
-    fontFamily: '"Urbanist", "Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: 'System',
     h1: {
-      fontSize: '2.5rem',
-      fontWeight: 700,
+      fontSize: '2.125rem',
+      fontWeight: 300,
     },
     h2: {
-      fontSize: '2rem',
-      fontWeight: 600,
+      fontSize: '1.75rem',
+      fontWeight: 300,
     },
     h3: {
-      fontSize: '1.75rem',
-      fontWeight: 600,
+      fontSize: '1.5rem',
+      fontWeight: 400,
     },
     h4: {
-      fontSize: '1.5rem',
-      fontWeight: 600,
+      fontSize: '1.25rem',
+      fontWeight: 400,
     },
     h5: {
-      fontSize: '1.25rem',
-      fontWeight: 600,
+      fontSize: '1.125rem',
+      fontWeight: 400,
     },
     h6: {
-      fontSize: '1.125rem',
-      fontWeight: 600,
+      fontSize: '1rem',
+      fontWeight: 500,
     },
     button: {
       textTransform: 'none',
@@ -92,20 +87,20 @@ const createAppTheme = (mode: ThemeMode): Theme => createTheme({
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 8,
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
+          borderRadius: 8,
           fontWeight: 500,
           padding: '8px 16px',
         },
         contained: {
-          boxShadow: '0 4px 14px 0 rgba(85, 70, 255, 0.39)',
+          boxShadow: '0 2px 8px 0 rgba(85, 70, 255, 0.25)',
           '&:hover': {
-            boxShadow: '0 6px 20px rgba(85, 70, 255, 0.23)',
+            boxShadow: '0 4px 12px rgba(85, 70, 255, 0.15)',
           },
         },
       },
@@ -113,15 +108,15 @@ const createAppTheme = (mode: ThemeMode): Theme => createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
+          borderRadius: 12,
         },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
-          boxShadow: '0 2px 15px 0 rgba(85, 70, 255, 0.08)',
+          borderRadius: 12,
+          boxShadow: '0 2px 8px 0 rgba(85, 70, 255, 0.08)',
         },
       },
     },
@@ -131,55 +126,31 @@ const createAppTheme = (mode: ThemeMode): Theme => createTheme({
 interface ThemeProviderProps {
   children: React.ReactNode;
   defaultTheme?: ThemeMode;
-  storageKey?: string;
 }
 
 export function ThemeProvider({
   children,
   defaultTheme = 'light',
-  storageKey = 'voicify-theme',
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<ThemeMode>(
-    () => (typeof window !== 'undefined' && localStorage.getItem(storageKey) as ThemeMode) || defaultTheme
-  );
-
+  const [theme, setTheme] = useState<ThemeMode>(defaultTheme);
   const muiTheme = createAppTheme(theme);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const root = window.document.documentElement;
-      root.classList.remove('light', 'dark');
-      root.setAttribute('data-theme', theme);
-    }
-  }, [theme]);
 
   const value = {
     theme,
     muiTheme,
     setTheme: (newTheme: ThemeMode) => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(storageKey, newTheme);
-      }
       setTheme(newTheme);
     },
     toggleTheme: () =>
-      setTheme((prevTheme) => {
-        const newTheme = prevTheme === 'light' ? 'dark' : 'light';
-        if (typeof window !== 'undefined') {
-          localStorage.setItem(storageKey, newTheme);
-        }
-        return newTheme;
-      }),
+      setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light')),
   };
 
   return (
-    <CacheProvider value={cache}>
-      <MuiThemeProvider theme={muiTheme}>
-        <CssBaseline />
-        <ThemeContext.Provider value={value}>
-          {children}
-        </ThemeContext.Provider>
-      </MuiThemeProvider>
-    </CacheProvider>
+    <MuiThemeProvider theme={muiTheme}>
+      <CssBaseline />
+      <ThemeContext.Provider value={value}>
+        {children}
+      </ThemeContext.Provider>
+    </MuiThemeProvider>
   );
 }

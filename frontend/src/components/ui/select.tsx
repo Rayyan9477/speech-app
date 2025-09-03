@@ -40,7 +40,6 @@ export const Select: React.FC<SelectProps> = ({
         </option>
         {children}
       </select>
-    </div>
   );
 };
 

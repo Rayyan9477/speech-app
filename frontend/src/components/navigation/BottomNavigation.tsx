@@ -1,137 +1,141 @@
+'use client';
+
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
-  HomeIcon,
-  MicrophoneIcon,
-  SpeakerWaveIcon,
-  LanguageIcon,
-  FolderIcon,
-  Cog6ToothIcon,
-  SparklesIcon,
-  UsersIcon
-} from '@heroicons/react/24/outline';
+  BottomNavigation as MuiBottomNavigation,
+  BottomNavigationAction,
+  Paper,
+  Box,
+} from '@mui/material';
 import {
-  HomeIcon as HomeIconSolid,
-  MicrophoneIcon as MicrophoneIconSolid,
-  SpeakerWaveIcon as SpeakerWaveIconSolid,
-  LanguageIcon as LanguageIconSolid,
-  FolderIcon as FolderIconSolid,
-  Cog6ToothIcon as Cog6ToothIconSolid
-} from '@heroicons/react/24/solid';
-import { useTheme } from '../../lib/theme-provider';
+  Home,
+  VolumeUp,
+  Mic,
+  Translate,
+  LibraryMusic,
+  Settings,
+} from '@mui/icons-material';
 
 const BottomNavigation = () => {
-  const location = useLocation();
-  const { theme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const navigationItems = [
     {
-      name: 'Home',
-      path: '/app/',
-      icon: HomeIcon,
-      activeIcon: HomeIconSolid,
+      label: 'Home',
+      path: '/app',
+      icon: <Home />,
     },
     {
-      name: 'TTS',
+      label: 'TTS',
       path: '/app/tts',
-      icon: SpeakerWaveIcon,
-      activeIcon: SpeakerWaveIconSolid,
+      icon: <VolumeUp />,
     },
     {
-      name: 'Voice Changer',
+      label: 'Voice Changer',
       path: '/app/voice-changer',
-      icon: MicrophoneIcon,
-      activeIcon: MicrophoneIconSolid,
+      icon: <Mic />,
     },
     {
-      name: 'Translate',
+      label: 'Translate',
       path: '/app/voice-translate',
-      icon: LanguageIcon,
-      activeIcon: LanguageIconSolid,
+      icon: <Translate />,
     },
     {
-      name: 'Library',
+      label: 'Library',
       path: '/app/voice-library',
-      icon: FolderIcon,
-      activeIcon: FolderIconSolid,
+      icon: <LibraryMusic />,
     },
     {
-      name: 'Settings',
+      label: 'Settings',
       path: '/app/settings',
-      icon: Cog6ToothIcon,
-      activeIcon: Cog6ToothIconSolid,
+      icon: <Settings />,
     },
   ];
 
-  const isActive = (path: string) => {
-    if (path === '/app/') {
-      return location.pathname === '/app/' || location.pathname === '/app';
-    }
-    return location.pathname.startsWith(path);
+  const getActiveValue = () => {
+    const activeItem = navigationItems.find(item =>
+      pathname === item.path || (item.path !== '/app' && pathname.startsWith(item.path))
+    );
+    return activeItem ? navigationItems.indexOf(activeItem) : 0;
+  };
+
+  const handleNavigationChange = (_event: React.SyntheticEvent, newValue: number) => {
+    router.push(navigationItems[newValue].path);
   };
 
   return (
-    <nav className={`fixed bottom-0 left-0 right-0 ${
-      theme === 'dark'
-        ? 'bg-slate-900/95 backdrop-blur-lg border-t border-slate-700'
-        : 'bg-white/95 backdrop-blur-lg border-t border-slate-200'
-    }`}>
-      <div className="flex items-center justify-around px-2 py-2">
-        {navigationItems.map((item) => {
-          const active = isActive(item.path);
-          const IconComponent = active ? item.activeIcon : item.icon;
-
-          return (
-            <Link
-              key={item.name}
-              to={item.path}
-              className="relative flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-1"
-            >
-              <motion.div
-                className="relative"
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              >
-                <IconComponent
-                  className={`w-6 h-6 mb-1 transition-colors ${
-                    active
-                      ? 'text-primary'
-                      : theme === 'dark'
-                      ? 'text-slate-400'
-                      : 'text-slate-500'
-                  }`}
-                />
-
-                {/* Active indicator */}
-                {active && (
-                  <motion.div
-                    className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
-                    layoutId="activeIndicator"
-                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                  />
-                )}
-              </motion.div>
-
-              <span
-                className={`text-xs font-medium transition-colors ${
-                  active
-                    ? 'text-primary'
-                    : theme === 'dark'
-                    ? 'text-slate-400'
-                    : 'text-slate-500'
-                }`}
-              >
-                {item.name}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-
-      {/* Safe area for mobile devices */}
-      <div className="h-safe-area-inset-bottom" />
-    </nav>
+    <Paper
+      sx={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        borderRadius: 0,
+        backgroundColor: 'background.paper',
+        backdropFilter: 'blur(10px)',
+        borderTop: 1,
+        borderColor: 'divider',
+      }}
+      elevation={8}
+    >
+      <Box sx={{ pb: 'env(safe-area-inset-bottom)' }}>
+        <MuiBottomNavigation
+          value={getActiveValue()}
+          onChange={handleNavigationChange}
+          sx={{
+            backgroundColor: 'transparent',
+            '& .MuiBottomNavigationAction-root': {
+              color: 'text.secondary',
+              '&.Mui-selected': {
+                color: 'primary.main',
+              },
+              minWidth: 'auto',
+              padding: '6px 8px',
+            },
+            '& .MuiBottomNavigationAction-label': {
+              fontSize: '0.75rem',
+              fontWeight: 500,
+              '&.Mui-selected': {
+                fontSize: '0.75rem',
+              },
+            },
+          }}
+        >
+          {navigationItems.map((item, index) => (
+            <BottomNavigationAction
+              key={item.label}
+              label={item.label}
+              icon={
+                <motion.div
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  {item.icon}
+                </motion.div>
+              }
+              sx={{
+                position: 'relative',
+                '&.Mui-selected::after': {
+                  content: '""',
+                  position: 'absolute',
+                  bottom: 0,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: 4,
+                  height: 4,
+                  borderRadius: '50%',
+                  backgroundColor: 'primary.main',
+                },
+              }}
+            />
+          ))}
+        </MuiBottomNavigation>
+      </Box>
+    </Paper>
   );
 };
 
