@@ -28,6 +28,7 @@ frontend/build/
 *.swp
 *.swo
 *~
+.next/
 
 # OS generated files
 .DS_Store

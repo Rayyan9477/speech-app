@@ -13,6 +13,13 @@ import Projects from './main/Projects';
 import ProjectCollaboration from './main/ProjectCollaboration';
 import ProjectAnalytics from './main/ProjectAnalytics';
 import Settings from './main/Settings';
+import Notifications from './main/Notifications';
+import ExploreVoices from './main/ExploreVoices';
+import MyVoices from './main/MyVoices';
+import TTSEditor from './main/TTSEditor';
+import EnhancedProjects from './main/EnhancedProjects';
+import VoiceChangerWorkflow from './main/VoiceChangerWorkflow';
+import VoiceTranslateWorkflow from './main/VoiceTranslateWorkflow';
 import { useTheme } from '../lib/theme-provider';
 
 const MainApp = () => {
@@ -35,12 +42,19 @@ const MainApp = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/tts" element={<TTS />} />
+            <Route path="/tts-editor" element={<TTSEditor />} />
             <Route path="/voice-changer" element={<VoiceChanger />} />
+            <Route path="/voice-changer-workflow" element={<VoiceChangerWorkflow />} />
             <Route path="/voice-translate" element={<VoiceTranslate />} />
+            <Route path="/voice-translate-workflow" element={<VoiceTranslateWorkflow />} />
             <Route path="/voice-library" element={<VoiceLibrary />} />
+            <Route path="/explore-voices" element={<ExploreVoices />} />
+            <Route path="/my-voices" element={<MyVoices />} />
             <Route path="/voice-customizer" element={<VoiceCustomizer />} />
             <Route path="/voice-cloning" element={<VoiceCloning />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/enhanced-projects" element={<EnhancedProjects />} />
+            <Route path="/notifications" element={<Notifications />} />
             <Route path="/collaboration" element={<ProjectCollaboration />} />
             <Route path="/analytics" element={<ProjectAnalytics />} />
             <Route path="/settings" element={<Settings />} />

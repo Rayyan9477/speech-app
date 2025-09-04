@@ -351,7 +351,7 @@ const ProjectCollaboration = () => {
                     <div className="flex-1">
                       <p className="text-sm text-foreground">
                         <span className="font-medium">{activity.user}</span> {activity.action}{' '}
-                        <span className="font-medium">"{activity.project}"</span>
+                        <span className="font-medium">&quot;{activity.project}&quot;</span>
                       </p>
                       <p className="text-xs text-muted-foreground">{activity.time}</p>
                     </div>

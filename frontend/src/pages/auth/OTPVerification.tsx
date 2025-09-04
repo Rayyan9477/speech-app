@@ -132,7 +132,7 @@ const OTPVerification = () => {
             variants={itemVariants}
             className="text-muted-foreground mb-8 leading-relaxed"
           >
-            We've sent a 6-digit verification code to your email address.
+            We&apos;ve sent a 6-digit verification code to your email address.
             Please enter it below to continue.
           </motion.p>
 
@@ -183,12 +183,12 @@ const OTPVerification = () => {
                 onClick={handleResendOTP}
                 className="text-primary hover:underline font-medium"
               >
-                Didn't receive the code? Resend
+                Didn&apos;t receive the code? Resend
               </button>
             )}
 
             <div className="text-xs text-muted-foreground">
-              <p>Check your spam folder if you don't see the email</p>
+              <p>Check your spam folder if you don&apos;t see the email</p>
               <p>Wrong email? <button className="text-primary hover:underline">Change email address</button></p>
             </div>
           </motion.div>

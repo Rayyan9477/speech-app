@@ -216,7 +216,7 @@ const Login = () => {
           {/* Sign Up Link */}
           <motion.div variants={itemVariants} className="mt-8 text-center">
             <p className="text-muted-foreground">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link to="/signup" className="text-primary hover:underline font-medium">
                 Sign up
               </Link>

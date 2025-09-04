@@ -6,6 +6,7 @@ import Login from './pages/auth/Login';
 import SignUp from './pages/auth/SignUp';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import OTPVerification from './pages/auth/OTPVerification';
+import Walkthrough from './pages/auth/Walkthrough';
 import MainApp from './pages/MainApp';
 import './App.css';
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/otp-verification" element={<OTPVerification />} />
+            <Route path="/walkthrough" element={<Walkthrough />} />
 
             {/* Main App Route */}
             <Route path="/app/*" element={<MainApp />} />

@@ -83,7 +83,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode, onSuccess })
         {onToggleMode && (
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <button
                 type="button"
                 onClick={onToggleMode}

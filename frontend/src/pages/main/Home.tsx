@@ -154,10 +154,18 @@ const Home = () => {
             <h1 className="text-2xl font-bold text-foreground">Good morning! 👋</h1>
             <p className="text-muted-foreground mt-1">Ready to create amazing voices?</p>
           </div>
-          <Avatar className="w-12 h-12">
-            <AvatarImage src="/api/placeholder/48/48" />
-            <AvatarFallback>JD</AvatarFallback>
-          </Avatar>
+          <div className="flex items-center space-x-3">
+            <Link to="/app/notifications">
+              <Button variant="ghost" size="sm" className="p-2 relative">
+                <span className="text-xl">🔔</span>
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+              </Button>
+            </Link>
+            <Avatar className="w-12 h-12">
+              <AvatarImage src="/api/placeholder/48/48" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+          </div>
         </motion.div>
 
         {/* Quick Actions */}
@@ -192,7 +200,7 @@ const Home = () => {
         <motion.div variants={itemVariants}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-foreground">Featured Voices</h2>
-            <Link to="/app/voice-library" className="text-sm text-primary hover:underline">
+            <Link to="/app/explore-voices" className="text-sm text-primary hover:underline">
               View all
             </Link>
           </div>
@@ -233,7 +241,7 @@ const Home = () => {
         <motion.div variants={itemVariants}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-foreground">Recent Projects</h2>
-            <Link to="/app/projects" className="text-sm text-primary hover:underline">
+            <Link to="/app/enhanced-projects" className="text-sm text-primary hover:underline">
               View all
             </Link>
           </div>

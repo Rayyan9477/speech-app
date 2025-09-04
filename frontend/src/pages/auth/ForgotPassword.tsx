@@ -91,7 +91,7 @@ const ForgotPassword = () => {
                 variants={itemVariants}
                 className="text-muted-foreground mb-8 leading-relaxed"
               >
-                No worries! Enter your email address and we'll send you a link to reset your password.
+                No worries! Enter your email address and we&apos;ll send you a link to reset your password.
               </motion.p>
 
               {/* Form */}
@@ -148,7 +148,7 @@ const ForgotPassword = () => {
                 variants={itemVariants}
                 className="text-muted-foreground mb-8 leading-relaxed"
               >
-                We've sent a password reset link to{' '}
+                We&apos;ve sent a password reset link to{' '}
                 <span className="font-medium text-foreground">{email}</span>
               </motion.p>
 
@@ -180,7 +180,7 @@ const ForgotPassword = () => {
                 variants={itemVariants}
                 className="mt-8 p-4 bg-accent/50 rounded-xl"
               >
-                <h3 className="font-medium text-foreground mb-2">Didn't receive the email?</h3>
+                <h3 className="font-medium text-foreground mb-2">Didn&apos;t receive the email?</h3>
                 <ul className="text-sm text-muted-foreground space-y-1 text-left">
                   <li>• Check your spam or junk folder</li>
                   <li>• Make sure the email address is correct</li>

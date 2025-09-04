@@ -491,7 +491,7 @@ const VoiceCloning = () => {
                         Processing Time
                       </p>
                       <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                        Voice cloning typically takes 10-15 minutes. You'll receive a notification when complete.
+                        Voice cloning typically takes 10-15 minutes. You&apos;ll receive a notification when complete.
                       </p>
                     </div>
                   </div>
@@ -512,7 +512,7 @@ const VoiceCloning = () => {
                 <div>
                   <h3 className="text-xl font-semibold text-foreground">Voice Clone Ready!</h3>
                   <p className="text-muted-foreground">
-                    Your custom voice "{cloneName || 'My Voice'}" has been created successfully
+                    Your custom voice &quot;{cloneName || 'My Voice'}&quot; has been created successfully
                   </p>
                 </div>
 
