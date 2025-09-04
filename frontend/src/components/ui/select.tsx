@@ -20,8 +20,8 @@ export const Select: React.FC<SelectProps> = ({
     onValueChange(e.target.value);
   };
 
-  const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
-  const labelId = `${selectId}-label`;
+  const autoId = React.useId();
+  const selectId = id || autoId;
 
   return (
     <select

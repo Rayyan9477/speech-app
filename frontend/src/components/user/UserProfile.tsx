@@ -97,10 +97,11 @@ export const UserProfile: React.FC = () => {
           <form onSubmit={handleProfileUpdate} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="profile-first-name" className="block text-sm font-medium text-gray-700 mb-1">
                   First Name
                 </label>
                 <input
+                  id="profile-first-name"
                   type="text"
                   value={formData.first_name}
                   onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
@@ -109,10 +110,11 @@ export const UserProfile: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="profile-last-name" className="block text-sm font-medium text-gray-700 mb-1">
                   Last Name
                 </label>
                 <input
+                  id="profile-last-name"
                   type="text"
                   value={formData.last_name}
                   onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
@@ -123,10 +125,11 @@ export const UserProfile: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="profile-email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
               </label>
               <input
+                id="profile-email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
@@ -215,10 +218,11 @@ export const UserProfile: React.FC = () => {
         {isChangingPassword ? (
           <form onSubmit={handlePasswordChange} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="current-password" className="block text-sm font-medium text-gray-700 mb-1">
                 Current Password
               </label>
               <input
+                id="current-password"
                 type="password"
                 value={passwordData.current_password}
                 onChange={(e) => setPasswordData(prev => ({ ...prev, current_password: e.target.value }))}
@@ -228,10 +232,11 @@ export const UserProfile: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1">
                 New Password
               </label>
               <input
+                id="new-password"
                 type="password"
                 value={passwordData.new_password}
                 onChange={(e) => setPasswordData(prev => ({ ...prev, new_password: e.target.value }))}
@@ -244,10 +249,11 @@ export const UserProfile: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="confirm-new-password" className="block text-sm font-medium text-gray-700 mb-1">
                 Confirm New Password
               </label>
               <input
+                id="confirm-new-password"
                 type="password"
                 value={passwordData.confirm_password}
                 onChange={(e) => setPasswordData(prev => ({ ...prev, confirm_password: e.target.value }))}

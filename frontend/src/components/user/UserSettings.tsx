@@ -46,9 +46,9 @@ export const UserSettings: React.FC = () => {
   };
 
   const updateSetting = (path: string[], value: any) => {
-    setSettings(prev => {
-      const newSettings = { ...prev };
-      let current = newSettings;
+    setSettings((prev: typeof settings) => {
+      const newSettings = { ...prev } as typeof settings;
+      let current: any = newSettings;
       
       for (let i = 0; i < path.length - 1; i++) {
         current[path[i]] = { ...current[path[i]] };
@@ -100,6 +100,7 @@ export const UserSettings: React.FC = () => {
                     checked={settings.theme === theme}
                     onChange={(e) => updateSetting(['theme'], e.target.value)}
                     className="mr-2"
+                    aria-label={`Theme: ${theme}`}
                   />
                   <span className="capitalize">{theme}</span>
                 </label>
@@ -108,10 +109,11 @@ export const UserSettings: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="display-language-select">
               Display Language
             </label>
             <select
+              id="display-language-select"
               value={settings.language}
               onChange={(e) => updateSetting(['language'], e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -142,6 +144,7 @@ export const UserSettings: React.FC = () => {
                 checked={settings.notifications.email}
                 onChange={(e) => updateSetting(['notifications', 'email'], e.target.checked)}
                 className="sr-only peer"
+                aria-label="Email Notifications"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
             </label>
@@ -158,6 +161,7 @@ export const UserSettings: React.FC = () => {
                 checked={settings.notifications.processing_complete}
                 onChange={(e) => updateSetting(['notifications', 'processing_complete'], e.target.checked)}
                 className="sr-only peer"
+                aria-label="Processing Complete Notifications"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
             </label>
@@ -174,6 +178,7 @@ export const UserSettings: React.FC = () => {
                 checked={settings.notifications.new_features}
                 onChange={(e) => updateSetting(['notifications', 'new_features'], e.target.checked)}
                 className="sr-only peer"
+                aria-label="New Features Notifications"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
             </label>
@@ -197,6 +202,7 @@ export const UserSettings: React.FC = () => {
                 checked={settings.privacy.auto_delete_files}
                 onChange={(e) => updateSetting(['privacy', 'auto_delete_files'], e.target.checked)}
                 className="sr-only peer"
+                aria-label="Auto-delete Files"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
             </label>
@@ -204,10 +210,11 @@ export const UserSettings: React.FC = () => {
 
           {settings.privacy.auto_delete_files && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="auto-delete-days-select">
                 Delete files after (days)
               </label>
               <select
+                id="auto-delete-days-select"
                 value={settings.privacy.auto_delete_days}
                 onChange={(e) => updateSetting(['privacy', 'auto_delete_days'], parseInt(e.target.value))}
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -231,6 +238,7 @@ export const UserSettings: React.FC = () => {
                 checked={settings.privacy.allow_analytics}
                 onChange={(e) => updateSetting(['privacy', 'allow_analytics'], e.target.checked)}
                 className="sr-only peer"
+                aria-label="Analytics"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
             </label>
@@ -244,10 +252,11 @@ export const UserSettings: React.FC = () => {
         
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="default-voice-model-select">
               Default Voice Model
             </label>
             <select
+              id="default-voice-model-select"
               value={settings.processing.default_voice_model}
               onChange={(e) => updateSetting(['processing', 'default_voice_model'], e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -270,6 +279,7 @@ export const UserSettings: React.FC = () => {
                 checked={settings.processing.auto_translate}
                 onChange={(e) => updateSetting(['processing', 'auto_translate'], e.target.checked)}
                 className="sr-only peer"
+                aria-label="Auto-translate"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
             </label>
@@ -277,10 +287,11 @@ export const UserSettings: React.FC = () => {
 
           {settings.processing.auto_translate && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="default-target-language-select">
                 Default Target Language
               </label>
               <select
+                id="default-target-language-select"
                 value={settings.processing.default_target_language}
                 onChange={(e) => updateSetting(['processing', 'default_target_language'], e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -312,6 +323,7 @@ export const UserSettings: React.FC = () => {
                     checked={settings.processing.audio_quality === quality}
                     onChange={(e) => updateSetting(['processing', 'audio_quality'], e.target.value)}
                     className="mr-2"
+                    aria-label={`Audio Quality: ${quality}`}
                   />
                   <span className="capitalize">{quality}</span>
                 </label>

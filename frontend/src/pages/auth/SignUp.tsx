@@ -67,11 +67,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col ${
-      theme === 'dark'
-        ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'
-        : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
-    }`}>
+    <div className="min-h-screen flex flex-col bg-gradient-secondary">
       {/* Header */}
       <header className="p-6">
         <button
@@ -93,7 +89,7 @@ const SignUp = () => {
         >
           {/* Logo */}
           <motion.div variants={itemVariants} className="text-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-primary flex items-center justify-center mx-auto mb-4">
               <User className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-foreground mb-2">Create Account</h1>
@@ -207,6 +203,7 @@ const SignUp = () => {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -234,6 +231,7 @@ const SignUp = () => {
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
                 >
                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -264,7 +262,7 @@ const SignUp = () => {
             <Button
               type="submit"
               size="lg"
-              className="w-full h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg"
+              className="w-full h-12 bg-gradient-primary hover:opacity-90 text-white font-semibold rounded-xl shadow-lg"
             >
               Create Account
             </Button>

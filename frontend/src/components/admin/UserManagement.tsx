@@ -171,7 +171,7 @@ export const UserManagement: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
         <Button
           onClick={() => setShowCreateForm(true)}
-          className="bg-green-600 hover:bg-green-700"
+          className="bg-success bg-success-hover"
         >
           Create User
         </Button>
@@ -201,6 +201,7 @@ export const UserManagement: React.FC = () => {
                 onClick={() => setShowCreateForm(false)}
                 variant="outline"
                 size="sm"
+                aria-label="Close"
               >
                 ×
               </Button>
@@ -209,10 +210,11 @@ export const UserManagement: React.FC = () => {
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="create-first-name" className="block text-sm font-medium text-gray-700 mb-1">
                     First Name
                   </label>
                   <input
+                    id="create-first-name"
                     type="text"
                     value={createForm.first_name}
                     onChange={(e) => setCreateForm(prev => ({ ...prev, first_name: e.target.value }))}
@@ -221,10 +223,11 @@ export const UserManagement: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="create-last-name" className="block text-sm font-medium text-gray-700 mb-1">
                     Last Name
                   </label>
                   <input
+                    id="create-last-name"
                     type="text"
                     value={createForm.last_name}
                     onChange={(e) => setCreateForm(prev => ({ ...prev, last_name: e.target.value }))}
@@ -235,10 +238,11 @@ export const UserManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="create-username" className="block text-sm font-medium text-gray-700 mb-1">
                   Username
                 </label>
                 <input
+                  id="create-username"
                   type="text"
                   value={createForm.username}
                   onChange={(e) => setCreateForm(prev => ({ ...prev, username: e.target.value }))}
@@ -248,10 +252,11 @@ export const UserManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="create-email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email
                 </label>
                 <input
+                  id="create-email"
                   type="email"
                   value={createForm.email}
                   onChange={(e) => setCreateForm(prev => ({ ...prev, email: e.target.value }))}
@@ -261,10 +266,11 @@ export const UserManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="create-password" className="block text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
                 <input
+                  id="create-password"
                   type="password"
                   value={createForm.password}
                   onChange={(e) => setCreateForm(prev => ({ ...prev, password: e.target.value }))}
@@ -275,10 +281,11 @@ export const UserManagement: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="create-role" className="block text-sm font-medium text-gray-700 mb-1">
                     Role
                   </label>
                   <select
+                    id="create-role"
                     value={createForm.role}
                     onChange={(e) => setCreateForm(prev => ({ ...prev, role: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -289,10 +296,11 @@ export const UserManagement: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="create-status" className="block text-sm font-medium text-gray-700 mb-1">
                     Status
                   </label>
                   <select
+                    id="create-status"
                     value={createForm.status}
                     onChange={(e) => setCreateForm(prev => ({ ...prev, status: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -312,7 +320,7 @@ export const UserManagement: React.FC = () => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                <Button type="submit" className="bg-success bg-success-hover">
                   Create User
                 </Button>
               </div>
@@ -416,6 +424,7 @@ export const UserManagement: React.FC = () => {
                 onClick={() => setEditingUser(null)}
                 variant="outline"
                 size="sm"
+                aria-label="Close"
               >
                 ×
               </Button>
@@ -423,10 +432,11 @@ export const UserManagement: React.FC = () => {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="edit-role" className="block text-sm font-medium text-gray-700 mb-1">
                   Role
                 </label>
                 <select
+                  id="edit-role"
                   value={editingUser.role}
                   onChange={(e) => setEditingUser(prev => prev ? { ...prev, role: e.target.value } : null)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -438,10 +448,11 @@ export const UserManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="edit-status" className="block text-sm font-medium text-gray-700 mb-1">
                   Status
                 </label>
                 <select
+                  id="edit-status"
                   value={editingUser.status}
                   onChange={(e) => setEditingUser(prev => prev ? { ...prev, status: e.target.value } : null)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

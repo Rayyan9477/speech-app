@@ -6,6 +6,13 @@ import { Badge } from '../../components/ui/badge';
 import { Switch } from '../../components/ui/switch';
 import { Input } from '../../components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogFooter 
+} from '../../components/ui/dialog';
 import { useTheme } from '../../lib/theme-provider';
 import {
   UserIcon,
@@ -400,7 +407,7 @@ const Settings = () => {
                 <h3 className="text-lg font-semibold text-foreground">John Doe</h3>
                 <p className="text-muted-foreground">john.doe@example.com</p>
                 <div className="flex items-center space-x-2 mt-2">
-                  <Badge variant="default" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                  <Badge variant="default" className="bg-gradient-primary text-white">
                     Pro Plan
                   </Badge>
                   <span className="text-xs text-muted-foreground">Since Dec 2023</span>
@@ -425,7 +432,7 @@ const Settings = () => {
               <div className="text-xs text-muted-foreground">Voices Tried</div>
             </Card>
             <Card className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600 mb-1">156</div>
+              <div className="text-2xl font-bold text-info mb-1">156</div>
               <div className="text-xs text-muted-foreground">Downloads</div>
             </Card>
             <Card className="p-4 text-center">
@@ -436,24 +443,11 @@ const Settings = () => {
         </motion.div>
 
         {/* Profile Edit Modal */}
-        {activeSection === 'profile' && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4"
-          >
-            <Card className="w-full max-w-md p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-foreground">Edit Profile</h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setActiveSection('overview')}
-                >
-                  <XMarkIcon className="w-4 h-4" />
-                </Button>
-              </div>
+        <Dialog open={activeSection === 'profile'} onOpenChange={(open) => !open && setActiveSection('overview')}>
+          <DialogContent className="w-full max-w-md">
+            <DialogHeader>
+              <DialogTitle>Edit Profile</DialogTitle>
+            </DialogHeader>
 
               <div className="space-y-4">
                 <div className="text-center">
@@ -510,38 +504,24 @@ const Settings = () => {
                   />
                 </div>
 
-                <div className="flex space-x-3">
-                  <Button className="flex-1" onClick={() => setActiveSection('overview')}>
-                    Save Changes
-                  </Button>
-                  <Button variant="outline" className="flex-1" onClick={() => setActiveSection('overview')}>
-                    Cancel
-                  </Button>
-                </div>
               </div>
-            </Card>
-          </motion.div>
-        )}
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setActiveSection('overview')}>
+                  Cancel
+                </Button>
+                <Button onClick={() => setActiveSection('overview')}>
+                  Save Changes
+                </Button>
+              </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Password Change Modal */}
-        {activeSection === 'password' && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4"
-          >
-            <Card className="w-full max-w-md p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-foreground">Change Password</h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setActiveSection('overview')}
-                >
-                  <XMarkIcon className="w-4 h-4" />
-                </Button>
-              </div>
+        <Dialog open={activeSection === 'password'} onOpenChange={(open) => !open && setActiveSection('overview')}>
+          <DialogContent className="w-full max-w-md">
+            <DialogHeader>
+              <DialogTitle>Change Password</DialogTitle>
+            </DialogHeader>
 
               <div className="space-y-4">
                 <div>
@@ -560,6 +540,7 @@ const Settings = () => {
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
+                      aria-label={showPassword ? "Hide current password" : "Show current password"}
                     >
                       {showPassword ? <EyeSlashIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
                     </button>
@@ -598,18 +579,17 @@ const Settings = () => {
                   </p>
                 </div>
 
-                <div className="flex space-x-3">
-                  <Button className="flex-1" onClick={() => setActiveSection('overview')}>
-                    Update Password
-                  </Button>
-                  <Button variant="outline" className="flex-1" onClick={() => setActiveSection('overview')}>
-                    Cancel
-                  </Button>
-                </div>
               </div>
-            </Card>
-          </motion.div>
-        )}
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setActiveSection('overview')}>
+                  Cancel
+                </Button>
+                <Button onClick={() => setActiveSection('overview')}>
+                  Update Password
+                </Button>
+              </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Settings Sections */}
         <div className="space-y-6">
@@ -779,7 +759,7 @@ const Settings = () => {
 
         {/* Usage Stats */}
         <motion.div variants={itemVariants}>
-          <Card className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950">
+          <Card className="p-6 bg-gradient-secondary">
             <h3 className="font-semibold text-foreground mb-4">Usage Statistics</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
@@ -791,7 +771,7 @@ const Settings = () => {
                 <div className="text-sm text-muted-foreground">Projects Created</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600 mb-1">89</div>
+                <div className="text-2xl font-bold text-info mb-1">89</div>
                 <div className="text-sm text-muted-foreground">Voices Tried</div>
               </div>
               <div className="text-center">
