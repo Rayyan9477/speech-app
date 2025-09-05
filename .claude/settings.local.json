@@ -72,7 +72,8 @@
       "Read(/D:\\Repo\\speech-app\\frontend/**)",
       "Read(/D:\\Repo\\speech-app\\frontend/**)",
       "Read(/D:\\Repo\\speech-app\\frontend/**)",
-      "Read(/D:\\Repo\\speech-app\\frontend/**)"
+      "Read(/D:\\Repo\\speech-app\\frontend/**)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []
