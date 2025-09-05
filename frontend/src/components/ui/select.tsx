@@ -28,8 +28,11 @@ export const Select: React.FC<SelectProps> = ({
       id={selectId}
       value={value}
       onChange={handleChange}
-      aria-label="Select option"
-      title="Select option"
+      aria-label="Please select an option from the dropdown menu"
+      title="Select an option from the available choices"
+      role="combobox"
+      aria-expanded="false"
+      aria-haspopup="listbox"
       className={clsx(
         'block w-full bg-input border border-border text-foreground rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm',
         className

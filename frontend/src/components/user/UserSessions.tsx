@@ -111,8 +111,8 @@ export const UserSessions: React.FC = () => {
           <div className="text-6xl mb-4">🎵</div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">No Sessions Yet</h2>
           <p className="text-gray-600 mb-6">
-            Start by uploading an audio file to create your first session. 
-            You'll be able to transcribe, translate, and create voice clones.
+            Start by uploading an audio file to create your first session.
+            You&apos;ll be able to transcribe, translate, and create voice clones.
           </p>
           <Button className="bg-blue-600 hover:bg-blue-700">
             Upload Audio File

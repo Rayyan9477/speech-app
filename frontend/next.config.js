@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
-  transpilePackages: ['react-native', 'expo'],
   images: {
     domains: ['localhost'],
   },
@@ -14,13 +10,6 @@ const nextConfig = {
         destination: 'http://localhost:5000/api/:path*',
       },
     ];
-  },
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'react-native$': 'react-native-web',
-    };
-    return config;
   },
 };
 

@@ -1,6 +1,6 @@
 import { Urbanist, Poppins } from 'next/font/google';
-import { ThemeProvider } from '../src/lib/theme-provider';
-import '../src/index.css';
+import { ThemeProvider } from '@/lib/theme-provider';
+import '@/index.css';
 
 const urbanist = Urbanist({
   subsets: ['latin'],
@@ -30,7 +30,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
       </head>
-      <body style={{ fontFamily: 'var(--font-urbanist), var(--font-poppins), sans-serif' }}>
+      <body>
         <ThemeProvider defaultTheme="light" storageKey="voicify-theme">
           {children}
         </ThemeProvider>
