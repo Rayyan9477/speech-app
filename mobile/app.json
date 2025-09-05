@@ -16,14 +16,30 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.ailanguageprocessor.mobile"
+      "bundleIdentifier": "com.yourcompany.ailanguageprocessor.mobile",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs camera access to record videos for voice processing",
+        "NSMicrophoneUsageDescription": "This app needs microphone access to record audio for voice processing",
+        "NSPhotoLibraryUsageDescription": "This app needs photo library access to select audio files",
+        "NSPhotoLibraryAddUsageDescription": "This app needs permission to save processed audio files"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#5546FF"
       },
-      "package": "com.yourcompany.ailanguageprocessor.mobile"
+      "package": "com.yourcompany.ailanguageprocessor.mobile",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.WAKE_LOCK",
+        "android.permission.VIBRATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
