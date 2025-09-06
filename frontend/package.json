@@ -33,6 +33,7 @@
     "tailwindcss": "^4.1.12"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.27.1",
     "@types/animejs": "^3.1.7",
     "@types/node": "^20.2.5",
     "@types/react": "^18.2.7",

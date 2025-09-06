@@ -73,7 +73,15 @@
       "Read(/D:\\Repo\\speech-app\\frontend/**)",
       "Read(/D:\\Repo\\speech-app\\frontend/**)",
       "Read(/D:\\Repo\\speech-app\\frontend/**)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm test)",
+      "Bash(npx vitest:*)",
+      "Read(//r//**)",
+      "Bash(timeout 10s npm run dev)",
+      "Bash(timeout 5s npm run dev)"
     ],
     "deny": [],
     "ask": []

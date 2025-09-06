@@ -1,63 +1,52 @@
-'use client';
-
 import React from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Home,
-  Volume2,
-  Mic,
-  Languages,
-  Music,
-  Settings,
-} from 'lucide-react';
+  HomeIcon,
+  SpeakerWaveIcon,
+  MicrophoneIcon,
+  LanguageIcon,
+  MusicalNoteIcon,
+  Cog6ToothIcon
+} from '@heroicons/react/24/outline';
 
 const BottomNavigation = () => {
-  const router = useRouter();
-  const pathname = usePathname();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const navigationItems = [
     {
       label: 'Home',
-      path: '/app',
-      icon: <Home className="w-5 h-5" />,
+      path: '/app/',
+      icon: <HomeIcon className="w-5 h-5" />,
     },
     {
-      label: 'TTS',
-      path: '/app/tts',
-      icon: <Volume2 className="w-5 h-5" />,
+      label: 'My Voices',
+      path: '/app/my-voices',
+      icon: <MicrophoneIcon className="w-5 h-5" />,
     },
     {
-      label: 'Voice Changer',
-      path: '/app/voice-changer',
-      icon: <Mic className="w-5 h-5" />,
+      label: 'My Projects',
+      path: '/app/projects',
+      icon: <MusicalNoteIcon className="w-5 h-5" />,
     },
     {
-      label: 'Translate',
-      path: '/app/voice-translate',
-      icon: <Languages className="w-5 h-5" />,
-    },
-    {
-      label: 'Library',
-      path: '/app/voice-library',
-      icon: <Music className="w-5 h-5" />,
-    },
-    {
-      label: 'Settings',
+      label: 'Account',
       path: '/app/settings',
-      icon: <Settings className="w-5 h-5" />,
+      icon: <Cog6ToothIcon className="w-5 h-5" />,
     },
   ];
 
   const getActiveValue = () => {
+    const pathname = location.pathname;
     const activeItem = navigationItems.find(item =>
-      pathname === item.path || (item.path !== '/app' && pathname.startsWith(item.path))
+      pathname === item.path || (item.path !== '/app/' && pathname.startsWith(item.path))
     );
     return activeItem ? navigationItems.indexOf(activeItem) : 0;
   };
 
   const handleNavigationClick = (path: string) => {
-    router.push(path);
+    navigate(path);
   };
 
   const activeIndex = getActiveValue();

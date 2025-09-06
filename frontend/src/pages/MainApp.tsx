@@ -17,6 +17,7 @@ import Notifications from './main/Notifications';
 import ExploreVoices from './main/ExploreVoices';
 import MyVoices from './main/MyVoices';
 import TTSEditor from './main/TTSEditor';
+import TTSProjectCreation from './main/TTSProjectCreation';
 import EnhancedProjects from './main/EnhancedProjects';
 import VoiceChangerWorkflow from './main/VoiceChangerWorkflow';
 import VoiceTranslateWorkflow from './main/VoiceTranslateWorkflow';
@@ -42,6 +43,7 @@ const MainApp = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/tts" element={<TTS />} />
+            <Route path="/tts-create" element={<TTSProjectCreation />} />
             <Route path="/tts-editor" element={<TTSEditor />} />
             <Route path="/voice-changer" element={<VoiceChanger />} />
             <Route path="/voice-changer-workflow" element={<VoiceChangerWorkflow />} />
