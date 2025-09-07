@@ -123,7 +123,7 @@ export default function WelcomePage() {
           transition={{ duration: 0.6, delay: 0.8 }}
         >
           <Button
-            variant="primary"
+            variant="default"
             fullWidth
             className="h-12 font-medium"
             onClick={() => router.push('/signup')}

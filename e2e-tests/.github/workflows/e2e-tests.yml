@@ -1,0 +1,691 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run nightly tests at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - auth
+          - navigation
+          - tts
+          - voice-cloning
+          - visual
+          - accessibility
+          - performance
+          - cross-browser
+      browser:
+        description: 'Browser to test'
+        required: false
+        default: 'chromium'
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+          - all
+      headless:
+        description: 'Run in headless mode'
+        required: false
+        default: true
+        type: boolean
+
+env:
+  NODE_VERSION: '18'
+  FRONTEND_URL: http://localhost:3000
+  BACKEND_URL: http://localhost:8000
+  MOBILE_URL: http://localhost:19006
+  CI: true
+  HEADLESS: true
+
+jobs:
+  setup:
+    name: Setup and Build
+    runs-on: ubuntu-latest
+    outputs:
+      frontend-cache-key: ${{ steps.frontend-cache.outputs.cache-hit }}
+      backend-cache-key: ${{ steps.backend-cache.outputs.cache-hit }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: |
+            frontend/package-lock.json
+            mobile/package-lock.json
+            e2e-tests/package-lock.json
+
+      - name: Cache frontend dependencies
+        id: frontend-cache
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: frontend-${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('frontend/package-lock.json') }}
+
+      - name: Cache E2E dependencies
+        uses: actions/cache@v3
+        with:
+          path: e2e-tests/node_modules
+          key: e2e-${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('e2e-tests/package-lock.json') }}
+
+      - name: Install frontend dependencies
+        if: steps.frontend-cache.outputs.cache-hit != 'true'
+        working-directory: frontend
+        run: npm ci
+
+      - name: Install E2E dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            frontend/.next
+            frontend/build
+          retention-days: 1
+
+  test-servers:
+    name: Test Server Health
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install E2E dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Start test servers
+        run: |
+          # Start frontend server in background
+          cd frontend && npm start &
+          FRONTEND_PID=$!
+          
+          # Start backend server (if available)
+          if [ -d "backend" ]; then
+            cd backend && npm start &
+            BACKEND_PID=$!
+          fi
+          
+          echo "FRONTEND_PID=$FRONTEND_PID" >> $GITHUB_ENV
+          echo "BACKEND_PID=$BACKEND_PID" >> $GITHUB_ENV
+
+      - name: Wait for servers
+        working-directory: e2e-tests
+        run: node scripts/check-servers.js --wait --health --performance --ci-report
+
+      - name: Stop servers
+        if: always()
+        run: |
+          if [ ! -z "$FRONTEND_PID" ]; then kill $FRONTEND_PID || true; fi
+          if [ ! -z "$BACKEND_PID" ]; then kill $BACKEND_PID || true; fi
+
+  auth-tests:
+    name: Authentication Tests
+    runs-on: ubuntu-latest
+    needs: [setup, test-servers]
+    if: github.event.inputs.test_suite == 'auth' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    strategy:
+      matrix:
+        browser: [chromium]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: frontend/
+
+      - name: Start servers
+        run: |
+          cd frontend && npm start &
+          if [ -d "backend" ]; then cd backend && npm start &; fi
+        env:
+          NODE_ENV: test
+
+      - name: Wait for servers
+        working-directory: e2e-tests
+        run: node scripts/check-servers.js --wait
+
+      - name: Run authentication tests
+        working-directory: e2e-tests
+        run: npm test -- tests/frontend/auth.test.ts
+        env:
+          HEADLESS: ${{ github.event.inputs.headless || 'true' }}
+          BROWSER: ${{ matrix.browser }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: auth-test-results-${{ matrix.browser }}
+          path: |
+            e2e-tests/reports/
+            e2e-tests/screenshots/
+          retention-days: 7
+
+  navigation-tests:
+    name: Navigation Tests
+    runs-on: ubuntu-latest
+    needs: [setup, test-servers]
+    if: github.event.inputs.test_suite == 'navigation' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: frontend/
+
+      - name: Start servers
+        run: |
+          cd frontend && npm start &
+          if [ -d "backend" ]; then cd backend && npm start &; fi
+
+      - name: Wait for servers
+        working-directory: e2e-tests
+        run: node scripts/check-servers.js --wait
+
+      - name: Run navigation tests
+        working-directory: e2e-tests
+        run: npm test -- tests/frontend/navigation.test.ts
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: navigation-test-results
+          path: |
+            e2e-tests/reports/
+            e2e-tests/screenshots/
+          retention-days: 7
+
+  feature-tests:
+    name: Feature Tests
+    runs-on: ubuntu-latest
+    needs: [setup, test-servers]
+    if: github.event.inputs.test_suite == 'tts' || github.event.inputs.test_suite == 'voice-cloning' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    strategy:
+      matrix:
+        feature: [tts-workflow, voice-cloning-workflow]
+        include:
+          - feature: tts-workflow
+            test_file: tests/frontend/tts-workflow.test.ts
+          - feature: voice-cloning-workflow
+            test_file: tests/frontend/voice-cloning-workflow.test.ts
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: frontend/
+
+      - name: Create test fixtures
+        working-directory: e2e-tests
+        run: |
+          mkdir -p fixtures/audio
+          # Create dummy audio files for testing
+          echo "dummy audio content" > fixtures/audio/test-audio.wav
+          echo "dummy audio content" > fixtures/audio/test-voice.wav
+
+      - name: Start servers
+        run: |
+          cd frontend && npm start &
+          if [ -d "backend" ]; then cd backend && npm start &; fi
+
+      - name: Wait for servers
+        working-directory: e2e-tests
+        run: node scripts/check-servers.js --wait
+
+      - name: Run feature tests
+        working-directory: e2e-tests
+        run: npm test -- ${{ matrix.test_file }}
+        env:
+          TEST_TIMEOUT: 60000
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.feature }}-test-results
+          path: |
+            e2e-tests/reports/
+            e2e-tests/screenshots/
+          retention-days: 7
+
+  visual-tests:
+    name: Visual Regression Tests
+    runs-on: ubuntu-latest
+    needs: [setup, test-servers]
+    if: github.event.inputs.test_suite == 'visual' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: frontend/
+
+      - name: Start servers
+        run: |
+          cd frontend && npm start &
+          if [ -d "backend" ]; then cd backend && npm start &; fi
+
+      - name: Wait for servers
+        working-directory: e2e-tests
+        run: node scripts/check-servers.js --wait
+
+      - name: Run visual regression tests
+        working-directory: e2e-tests
+        run: npm test -- tests/visual/visual-regression.test.ts
+        env:
+          UPDATE_SNAPSHOTS: ${{ github.event.inputs.update_snapshots || 'false' }}
+
+      - name: Upload visual test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: visual-test-results
+          path: |
+            e2e-tests/screenshots/
+            e2e-tests/reports/
+          retention-days: 7
+
+      - name: Upload visual diff artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: visual-diffs
+          path: e2e-tests/screenshots/diffs/
+          retention-days: 30
+
+  accessibility-tests:
+    name: Accessibility Tests
+    runs-on: ubuntu-latest
+    needs: [setup, test-servers]
+    if: github.event.inputs.test_suite == 'accessibility' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: frontend/
+
+      - name: Start servers
+        run: |
+          cd frontend && npm start &
+          if [ -d "backend" ]; then cd backend && npm start &; fi
+
+      - name: Wait for servers
+        working-directory: e2e-tests
+        run: node scripts/check-servers.js --wait
+
+      - name: Run accessibility tests
+        working-directory: e2e-tests
+        run: npm test -- tests/accessibility/accessibility.test.ts
+
+      - name: Generate accessibility report
+        if: always()
+        working-directory: e2e-tests
+        run: |
+          echo "# Accessibility Test Report" > accessibility-report.md
+          echo "Generated on: $(date)" >> accessibility-report.md
+          echo "" >> accessibility-report.md
+          if [ -f "reports/accessibility-violations.json" ]; then
+            echo "## Violations Found" >> accessibility-report.md
+            cat reports/accessibility-violations.json >> accessibility-report.md
+          else
+            echo "## ✅ No accessibility violations found!" >> accessibility-report.md
+          fi
+
+      - name: Upload accessibility results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: accessibility-test-results
+          path: |
+            e2e-tests/reports/
+            e2e-tests/accessibility-report.md
+          retention-days: 7
+
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: [setup, test-servers]
+    if: github.event.inputs.test_suite == 'performance' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: frontend/
+
+      - name: Start servers
+        run: |
+          cd frontend && npm start &
+          if [ -d "backend" ]; then cd backend && npm start &; fi
+
+      - name: Wait for servers
+        working-directory: e2e-tests
+        run: node scripts/check-servers.js --wait --performance
+
+      - name: Run performance tests
+        working-directory: e2e-tests
+        run: npm test -- tests/performance/performance.test.ts
+
+      - name: Generate performance report
+        if: always()
+        working-directory: e2e-tests
+        run: |
+          echo "# Performance Test Report" > performance-report.md
+          echo "Generated on: $(date)" >> performance-report.md
+          echo "" >> performance-report.md
+          echo "## Metrics" >> performance-report.md
+          if [ -f "reports/performance-metrics.json" ]; then
+            cat reports/performance-metrics.json >> performance-report.md
+          fi
+
+      - name: Upload performance results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-test-results
+          path: |
+            e2e-tests/reports/
+            e2e-tests/performance-report.md
+          retention-days: 7
+
+  cross-browser-tests:
+    name: Cross-Browser Tests
+    runs-on: ubuntu-latest
+    needs: [setup, test-servers]
+    if: github.event.inputs.test_suite == 'cross-browser' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    strategy:
+      matrix:
+        browser: [chromium]
+        # Add more browsers when available
+        # browser: [chromium, firefox, webkit]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Install browser dependencies
+        run: |
+          # Install additional browser dependencies
+          sudo apt-get update
+          sudo apt-get install -y libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: frontend/
+
+      - name: Start servers
+        run: |
+          cd frontend && npm start &
+          if [ -d "backend" ]; then cd backend && npm start &; fi
+
+      - name: Wait for servers
+        working-directory: e2e-tests
+        run: node scripts/check-servers.js --wait
+
+      - name: Run cross-browser tests
+        working-directory: e2e-tests
+        run: npm test -- tests/cross-browser/cross-browser.test.ts
+        env:
+          BROWSER: ${{ matrix.browser }}
+
+      - name: Upload cross-browser results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cross-browser-test-results-${{ matrix.browser }}
+          path: |
+            e2e-tests/reports/
+            e2e-tests/screenshots/
+          retention-days: 7
+
+  mobile-tests:
+    name: Mobile Tests
+    runs-on: ubuntu-latest
+    needs: [setup, test-servers]
+    if: github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: e2e-tests
+        run: npm install
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: frontend/
+
+      - name: Start servers
+        run: |
+          cd frontend && npm start &
+          if [ -d "mobile" ]; then 
+            cd mobile && npm run web &
+            MOBILE_PID=$!
+            echo "MOBILE_PID=$MOBILE_PID" >> $GITHUB_ENV
+          fi
+          if [ -d "backend" ]; then cd backend && npm start &; fi
+
+      - name: Wait for servers
+        working-directory: e2e-tests
+        run: node scripts/check-servers.js --wait
+
+      - name: Run mobile compatibility tests
+        working-directory: e2e-tests
+        run: npm test -- --testNamePattern="mobile|responsive|touch"
+
+      - name: Upload mobile test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: mobile-test-results
+          path: |
+            e2e-tests/reports/
+            e2e-tests/screenshots/
+          retention-days: 7
+
+  test-report:
+    name: Generate Test Report
+    runs-on: ubuntu-latest
+    needs: [auth-tests, navigation-tests, feature-tests, visual-tests, accessibility-tests, performance-tests, cross-browser-tests, mobile-tests]
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all test results
+        uses: actions/download-artifact@v3
+        with:
+          path: test-results/
+
+      - name: Generate comprehensive test report
+        run: |
+          echo "# E2E Test Report" > test-report.md
+          echo "Generated on: $(date)" >> test-report.md
+          echo "Commit: ${{ github.sha }}" >> test-report.md
+          echo "Branch: ${{ github.ref_name }}" >> test-report.md
+          echo "" >> test-report.md
+          
+          echo "## Test Summary" >> test-report.md
+          echo "| Test Suite | Status | Results |" >> test-report.md
+          echo "|------------|--------|---------|" >> test-report.md
+          
+          for job in auth navigation feature visual accessibility performance cross-browser mobile; do
+            if [ -d "test-results/${job}-test-results" ] || [ -d "test-results/${job}-test-results-chromium" ]; then
+              echo "| ${job} | ✅ Completed | [Results](test-results/${job}-test-results) |" >> test-report.md
+            else
+              echo "| ${job} | ❌ Failed/Skipped | - |" >> test-report.md
+            fi
+          done
+          
+          echo "" >> test-report.md
+          echo "## Artifacts" >> test-report.md
+          echo "- Screenshots: Available in test result artifacts" >> test-report.md
+          echo "- Visual Diffs: Available if visual tests failed" >> test-report.md
+          echo "- Performance Metrics: Available in performance test results" >> test-report.md
+          echo "- Accessibility Report: Available in accessibility test results" >> test-report.md
+          
+          echo "" >> test-report.md
+          echo "---" >> test-report.md
+          echo "Report generated by GitHub Actions" >> test-report.md
+
+      - name: Upload comprehensive test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: comprehensive-test-report
+          path: |
+            test-report.md
+            test-results/
+          retention-days: 30
+
+      - name: Comment PR with test results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = 'test-report.md';
+            
+            if (fs.existsSync(reportPath)) {
+              const report = fs.readFileSync(reportPath, 'utf8');
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## 🧪 E2E Test Results\n\n${report}`
+              });
+            }
+
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    needs: [test-report]
+    if: always()
+    steps:
+      - name: Clean up resources
+        run: |
+          echo "🧹 Cleaning up test resources..."
+          # Kill any remaining processes
+          pkill -f "npm.*start" || true
+          pkill -f "node.*server" || true
+          echo "✅ Cleanup completed"
