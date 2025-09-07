@@ -8,16 +8,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-[#5546FF] to-[#7D8BFF] text-white hover:from-[#4A3BE8] hover:to-[#6B73FF] shadow-lg hover:shadow-xl",
+        default: "bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl",
         destructive:
-          "bg-gradient-to-r from-[#EF4444] to-[#F87171] text-white hover:from-[#DC2626] hover:to-[#EF4444] shadow-lg",
+          "bg-gradient-to-r from-destructive to-destructive/80 text-destructive-foreground hover:from-destructive/90 hover:to-destructive/70 shadow-lg",
         outline:
-          "border border-[#5546FF] bg-transparent text-[#5546FF] hover:bg-[#5546FF] hover:text-white",
+          "border border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground",
         secondary:
-          "bg-white text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-sm",
-        ghost: "hover:bg-gray-100 text-gray-700 hover:text-gray-900",
-        link: "text-[#5546FF] underline-offset-4 hover:underline",
-        gradient: "bg-gradient-to-r from-[#5546FF] to-[#7D8BFF] text-white hover:from-[#4A3BE8] hover:to-[#6B73FF] shadow-lg hover:shadow-xl",
+          "bg-card text-card-foreground hover:bg-muted border border-border shadow-sm",
+        ghost: "hover:bg-muted text-foreground hover:text-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+        gradient: "bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl",
       },
       size: {
         default: "h-12 px-6 py-3 text-base",

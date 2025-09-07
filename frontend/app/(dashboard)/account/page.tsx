@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar } from '@/components/ui/avatar';
@@ -120,7 +121,7 @@ export default function AccountPage() {
             <div className="relative">
               <Avatar className="w-20 h-20">
                 {profileImage ? (
-                  <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                  <Image src={profileImage} alt="Profile" className="w-full h-full object-cover" width={80} height={80} />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-semibold text-2xl">
                     J

@@ -1,6 +1,6 @@
 import { Urbanist, Poppins } from 'next/font/google';
 import { ThemeProvider } from '@/lib/theme-provider';
-import '@/index.css';
+import '../src/index.css';
 
 const urbanist = Urbanist({
   subsets: ['latin'],

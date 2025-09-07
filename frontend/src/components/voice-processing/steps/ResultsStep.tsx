@@ -298,7 +298,7 @@ const ResultsStep: React.FC<ResultsStepProps> = ({
             <SparklesIcon className="w-5 h-5 text-blue-600" />
             <div>
               <p className="font-medium text-foreground">Great job!</p>
-              <p className="text-sm text-muted-foreground">You've successfully completed a voice transformation</p>
+              <p className="text-sm text-muted-foreground">You&apos;ve successfully completed a voice transformation</p>
             </div>
           </div>
           

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
@@ -38,16 +38,52 @@ const EnhancedHome: React.FC = () => {
     setSuccess('');
   };
 
+  // Refs to track timeouts for cleanup
+  const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const successTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+      if (successTimeoutRef.current) {
+        clearTimeout(successTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleError = (message: string) => {
     setError(message);
     setSuccess('');
-    setTimeout(() => setError(''), 5000);
+    
+    // Clear existing timeout
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current);
+    }
+    
+    // Set new timeout
+    errorTimeoutRef.current = setTimeout(() => {
+      setError('');
+      errorTimeoutRef.current = null;
+    }, 5000);
   };
 
   const handleSuccess = (message: string) => {
     setSuccess(message);
     setError('');
-    setTimeout(() => setSuccess(''), 3000);
+    
+    // Clear existing timeout
+    if (successTimeoutRef.current) {
+      clearTimeout(successTimeoutRef.current);
+    }
+    
+    // Set new timeout
+    successTimeoutRef.current = setTimeout(() => {
+      setSuccess('');
+      successTimeoutRef.current = null;
+    }, 3000);
   };
 
   const handleTranscription = async (file: File) => {

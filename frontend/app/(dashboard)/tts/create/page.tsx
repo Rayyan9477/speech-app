@@ -115,7 +115,7 @@ export default function CreateTTSPage() {
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900">{template.name}</h3>
                     <p className="text-sm text-gray-600 mt-1">{template.description}</p>
-                    <p className="text-xs text-gray-500 mt-2 italic">"{template.sampleText}"</p>
+                    <p className="text-xs text-gray-500 mt-2 italic">&quot;{template.sampleText}&quot;</p>
                   </div>
                 </div>
               </button>

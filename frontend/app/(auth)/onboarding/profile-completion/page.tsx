@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar } from '@/components/ui/avatar';
@@ -82,10 +83,12 @@ export default function ProfileCompletionPage() {
             <div className="relative inline-block">
               <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 border-4 border-white shadow-lg">
                 {avatarPreview ? (
-                  <img 
+                  <Image 
                     src={avatarPreview} 
                     alt="Avatar preview" 
                     className="w-full h-full object-cover"
+                    width={96}
+                    height={96}
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white text-2xl font-bold">

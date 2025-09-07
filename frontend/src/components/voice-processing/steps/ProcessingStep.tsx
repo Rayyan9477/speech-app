@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../../ui/card';
 import { Progress } from '../../ui/progress';
@@ -27,7 +27,7 @@ const ProcessingStep: React.FC<ProcessingStepProps> = ({
   const [currentStage, setCurrentStage] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
 
-  const processingStages = [
+  const processingStages = useMemo(() => [
     {
       id: 0,
       title: 'Analyzing Audio',
@@ -56,7 +56,7 @@ const ProcessingStep: React.FC<ProcessingStepProps> = ({
       icon: CheckCircleIcon,
       duration: 100
     }
-  ];
+  ], []);
 
   // Update current stage based on progress
   useEffect(() => {
@@ -68,7 +68,7 @@ const ProcessingStep: React.FC<ProcessingStepProps> = ({
     if (stage !== -1) {
       setCurrentStage(stage);
     }
-  }, [progress]);
+  }, [progress, processingStages]);
 
   // Timer for elapsed time
   useEffect(() => {
@@ -293,7 +293,7 @@ const ProcessingStep: React.FC<ProcessingStepProps> = ({
       {isProcessing && (
         <Card className="p-4 bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800">
           <h3 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
-            🎯 What's Happening Now
+            🎯 What&apos;s Happening Now
           </h3>
           <div className="text-sm text-yellow-700 dark:text-yellow-300">
             <p className="mb-2">

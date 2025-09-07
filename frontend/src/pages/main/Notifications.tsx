@@ -254,7 +254,7 @@ const Notifications = () => {
           <motion.div variants={itemVariants} className="text-center py-12">
             <div className="text-6xl mb-4">🔔</div>
             <h3 className="text-lg font-semibold text-foreground mb-2">No notifications</h3>
-            <p className="text-muted-foreground">We'll let you know when something arrives!</p>
+            <p className="text-muted-foreground">We&apos;ll let you know when something arrives!</p>
           </motion.div>
         )}
       </motion.div>

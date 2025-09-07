@@ -47,7 +47,7 @@ const LogoutConfirmation: React.FC = () => {
                 Logout Confirmation
               </h3>
               <p className="text-muted-foreground mb-6">
-                Are you sure you want to logout? You'll need to sign in again to access your account.
+                Are you sure you want to logout? You&apos;ll need to sign in again to access your account.
               </p>
 
               {/* Action Buttons */}

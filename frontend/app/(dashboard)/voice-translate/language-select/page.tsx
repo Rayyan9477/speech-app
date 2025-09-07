@@ -187,7 +187,7 @@ export default function LanguageSelectPage() {
             <span>{toLanguage.flag} {toLanguage.name}</span>
           </div>
           <p className="text-green-100 text-sm mt-1">
-            Tap "{activeTab === 'from' ? 'From' : 'To'}" section above to change {activeTab === 'from' ? 'source' : 'target'} language
+            Tap &quot;{activeTab === 'from' ? 'From' : 'To'}&quot; section above to change {activeTab === 'from' ? 'source' : 'target'} language
           </p>
         </div>
 

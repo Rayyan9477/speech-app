@@ -70,7 +70,7 @@ export default function WelcomePage() {
           </div>
 
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Voicify</h1>
-          <p className="text-gray-600 mb-12">Choose how you'd like to continue</p>
+          <p className="text-gray-600 mb-12">Choose how you&apos;d like to continue</p>
         </motion.div>
       </div>
 

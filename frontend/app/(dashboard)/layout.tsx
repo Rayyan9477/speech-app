@@ -1,5 +1,5 @@
 import React from 'react';
-import BottomNavigation from '@/components/navigation/bottom-navigation';
+import BottomNavigation from '../../components/navigation/bottom-navigation';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
@@ -42,11 +42,7 @@ export const UserManagement: React.FC = () => {
   const [error, setError] = useState('');
   const { token } = useAuth();
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
+  const apiRequest = useCallback(async (endpoint: string, options: RequestInit = {}) => {
     const response = await fetch(`http://localhost:8000/api/v1${endpoint}`, {
       ...options,
       headers: {
@@ -62,9 +58,9 @@ export const UserManagement: React.FC = () => {
     }
 
     return response.json();
-  };
+  }, [token]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await apiRequest('/auth/admin/users?limit=100');
@@ -75,7 +71,11 @@ export const UserManagement: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [apiRequest]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();

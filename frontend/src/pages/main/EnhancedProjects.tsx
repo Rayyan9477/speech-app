@@ -380,7 +380,7 @@ const EnhancedProjects = () => {
           </DialogHeader>
           <div className="py-4">
             <p className="text-muted-foreground mb-4">
-              Are you sure you want to delete "{selectedProject?.title}"? This action cannot be undone.
+              Are you sure you want to delete &quot;{selectedProject?.title}&quot;? This action cannot be undone.
             </p>
             <div className="flex items-center space-x-3">
               <Button

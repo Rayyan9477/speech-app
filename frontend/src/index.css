@@ -3,101 +3,101 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom CSS Variables for Voicify Design System */
+/* Custom CSS Variables for Voicify Design System - Using Shared Design System */
 :root {
-  /* Light Theme Colors - Based on Figma Design */
-  --background: 255, 255, 255;
-  --foreground: 33, 33, 33;
-  --muted: 247, 247, 247;
-  --muted-foreground: 114, 114, 114;
-  --popover: 255, 255, 255;
-  --popover-foreground: 33, 33, 33;
-  --border: 229, 229, 229;
-  --input: 247, 247, 247;
-  --card: 255, 255, 255;
-  --card-foreground: 33, 33, 33;
-  --ring: 85, 70, 255;
+  /* Light Theme Colors - From Shared Design System */
+  --background: 255, 255, 255; /* Colors.light.background */
+  --foreground: 31, 41, 55; /* Colors.light.text.primary */
+  --muted: 249, 250, 251; /* Colors.light.surface */
+  --muted-foreground: 107, 114, 128; /* Colors.light.text.secondary */
+  --popover: 255, 255, 255; /* Colors.light.card */
+  --popover-foreground: 31, 41, 55; /* Colors.light.text.primary */
+  --border: 229, 231, 235; /* Colors.light.border */
+  --input: 249, 250, 251; /* Colors.light.surface */
+  --card: 255, 255, 255; /* Colors.light.card */
+  --card-foreground: 31, 41, 55; /* Colors.light.text.primary */
+  --ring: 85, 70, 255; /* Colors.primary[500] */
 
-  /* Primary Brand Colors */
-  --primary: 85, 70, 255;
+  /* Primary Brand Colors - From Shared Design System */
+  --primary: 85, 70, 255; /* Colors.primary[500] */
   --primary-foreground: 255, 255, 255;
-  --primary-hover: 74, 58, 255;
-  --primary-active: 63, 46, 255;
+  --primary-hover: 74, 59, 232; /* Colors.primary[600] */
+  --primary-active: 61, 47, 209; /* Colors.primary[700] */
 
-  /* Secondary Colors */
-  --secondary: 247, 247, 247;
-  --secondary-foreground: 33, 33, 33;
-  --secondary-hover: 239, 239, 239;
+  /* Secondary Colors - From Shared Design System */
+  --secondary: 107, 114, 128; /* Colors.secondary[500] */
+  --secondary-foreground: 31, 41, 55; /* Colors.light.text.primary */
+  --secondary-hover: 75, 85, 99; /* Colors.secondary[600] */
 
   /* Accent Colors */
-  --accent: 85, 70, 255;
+  --accent: 85, 70, 255; /* Colors.primary[500] */
   --accent-foreground: 255, 255, 255;
 
-  /* Status Colors */
-  --success: 34, 197, 94;
+  /* Status Colors - From Shared Design System */
+  --success: 34, 197, 94; /* Colors.success[500] */
   --success-foreground: 255, 255, 255;
-  --warning: 251, 191, 36;
+  --warning: 245, 158, 11; /* Colors.warning[500] */
   --warning-foreground: 33, 33, 33;
-  --error: 239, 68, 68;
+  --error: 239, 68, 68; /* Colors.error[500] */
   --error-foreground: 255, 255, 255;
-  --info: 59, 130, 246;
+  --info: 85, 70, 255; /* Colors.primary[500] */
   --info-foreground: 255, 255, 255;
 
   /* Destructive */
-  --destructive: 239, 68, 68;
+  --destructive: 239, 68, 68; /* Colors.error[500] */
   --destructive-foreground: 255, 255, 255;
 
-  /* Gradient Background */
+  /* Gradient Background - From Shared Design System */
   --gradient-primary: linear-gradient(135deg, #5546FF 0%, #7C3AED 100%);
-  --gradient-secondary: linear-gradient(135deg, #F7F7F7 0%, #E5E5E5 100%);
+  --gradient-secondary: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
 
-  /* Border Radius */
-  --radius: 8px;
-  --radius-sm: 6px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
+  /* Border Radius - From Shared Design System */
+  --radius: 8px; /* BorderRadius.base */
+  --radius-sm: 4px; /* BorderRadius.sm */
+  --radius-lg: 16px; /* BorderRadius.lg */
+  --radius-xl: 20px; /* BorderRadius.xl */
+  --radius-2xl: 24px; /* BorderRadius.2xl */
 }
 
-/* Dark Theme Colors - Based on Figma Design */
+/* Dark Theme Colors - From Shared Design System */
 [data-theme="dark"] {
-  --background: 24, 26, 32;
-  --foreground: 245, 245, 245;
-  --muted: 44, 48, 56;
-  --muted-foreground: 163, 163, 163;
-  --popover: 44, 48, 56;
-  --popover-foreground: 245, 245, 245;
-  --border: 64, 68, 75;
-  --input: 44, 48, 56;
-  --card: 44, 48, 56;
-  --card-foreground: 245, 245, 245;
+  --background: 15, 15, 35; /* Colors.dark.background */
+  --foreground: 255, 255, 255; /* Colors.dark.text.primary */
+  --muted: 26, 26, 46; /* Colors.dark.surface */
+  --muted-foreground: 160, 160, 184; /* Colors.dark.text.secondary */
+  --popover: 22, 33, 62; /* Colors.dark.card */
+  --popover-foreground: 255, 255, 255; /* Colors.dark.text.primary */
+  --border: 42, 42, 74; /* Colors.dark.border */
+  --input: 26, 26, 46; /* Colors.dark.surface */
+  --card: 22, 33, 62; /* Colors.dark.card */
+  --card-foreground: 255, 255, 255; /* Colors.dark.text.primary */
 
-  --primary: 85, 70, 255;
+  --primary: 85, 70, 255; /* Colors.primary[500] */
   --primary-foreground: 255, 255, 255;
-  --primary-hover: 74, 58, 255;
-  --primary-active: 63, 46, 255;
+  --primary-hover: 74, 59, 232; /* Colors.primary[600] */
+  --primary-active: 61, 47, 209; /* Colors.primary[700] */
 
-  --secondary: 64, 68, 75;
-  --secondary-foreground: 245, 245, 245;
-  --secondary-hover: 74, 78, 85;
+  --secondary: 107, 114, 128; /* Colors.secondary[500] */
+  --secondary-foreground: 255, 255, 255; /* Colors.dark.text.primary */
+  --secondary-hover: 75, 85, 99; /* Colors.secondary[600] */
 
-  --accent: 85, 70, 255;
+  --accent: 85, 70, 255; /* Colors.primary[500] */
   --accent-foreground: 255, 255, 255;
 
-  --success: 34, 197, 94;
+  --success: 34, 197, 94; /* Colors.success[500] */
   --success-foreground: 255, 255, 255;
-  --warning: 251, 191, 36;
-  --warning-foreground: 245, 245, 245;
-  --error: 239, 68, 68;
+  --warning: 245, 158, 11; /* Colors.warning[500] */
+  --warning-foreground: 255, 255, 255;
+  --error: 239, 68, 68; /* Colors.error[500] */
   --error-foreground: 255, 255, 255;
-  --info: 59, 130, 246;
+  --info: 85, 70, 255; /* Colors.primary[500] */
   --info-foreground: 255, 255, 255;
 
-  --destructive: 239, 68, 68;
+  --destructive: 239, 68, 68; /* Colors.error[500] */
   --destructive-foreground: 255, 255, 255;
 
   --gradient-primary: linear-gradient(135deg, #5546FF 0%, #7C3AED 100%);
-  --gradient-secondary: linear-gradient(135deg, #2C3038 0%, #404855 100%);
+  --gradient-secondary: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
 }
 
 /* Custom Scrollbar Styling */

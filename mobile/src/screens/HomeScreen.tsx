@@ -2,13 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import type { TabScreenProps, RootStackParamList } from '../types/navigation';
 import { useTheme } from '../lib/theme-provider';
 import { Colors, Typography, Spacing, BorderRadius } from '../../../shared/design-system';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<TabScreenProps<'Home'>['navigation']>();
   const { colors, isDark } = useTheme();
 
   const features = [
@@ -16,21 +17,21 @@ const HomeScreen = () => {
       title: 'AI Text to Speech',
       description: 'Convert your text into stunning speech.',
       icon: 'volume-up',
-      screen: 'TTS',
+      screen: 'TTSProjectCreation' as keyof RootStackParamList,
       gradientColors: ['#5546FF', '#7D8BFF'],
     },
     {
       title: 'AI Voice Changer',
       description: 'Change your voice to someone else\'s voice.',
       icon: 'mic',
-      screen: 'Voice Changer',
+      screen: 'VoiceCloningUpload' as keyof RootStackParamList,
       gradientColors: ['#22C55E', '#4ADE80'],
     },
     {
       title: 'AI Voice Translate',
       description: 'Translate your voice into another language.',
       icon: 'translate',
-      screen: 'Translate',
+      screen: 'VoiceSearch' as keyof RootStackParamList,
       gradientColors: ['#F59E0B', '#FBBF24'],
     },
   ];
@@ -94,7 +95,7 @@ const HomeScreen = () => {
               <TouchableOpacity
                 key={index}
                 style={styles.featureCard}
-                onPress={() => navigation.navigate(feature.screen as never)}
+                onPress={() => navigation.navigate(feature.screen)}
                 activeOpacity={0.8}
               >
                 <Card variant="default" style={{ flex: 1 }}>
@@ -117,7 +118,7 @@ const HomeScreen = () => {
                       variant="gradient"
                       size="small"
                       style={styles.createButton}
-                      onPress={() => navigation.navigate(feature.screen as never)}
+                      onPress={() => navigation.navigate(feature.screen)}
                     />
                   </View>
                 </Card>

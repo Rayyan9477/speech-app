@@ -299,7 +299,7 @@ const TranslationVoiceSelectionStep: React.FC<TranslationVoiceSelectionStepProps
                   Voice Selected Successfully!
                 </h3>
                 <p className="text-sm text-green-600 dark:text-green-400">
-                  Your translated audio will use {selectedVoice.name}'s voice
+                  Your translated audio will use {selectedVoice.name}&apos;s voice
                 </p>
               </div>
             </div>

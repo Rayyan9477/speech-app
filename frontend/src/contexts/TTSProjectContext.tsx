@@ -404,7 +404,7 @@ export function TTSProjectProvider({ children, initialProjectId }: TTSProjectPro
     if (initialProjectId) {
       loadProject(initialProjectId);
     }
-  }, [initialProjectId]);
+  }, [initialProjectId, loadProject]);
 
   // Convenience methods
   const setProjectTitle = useCallback((title: string) => {

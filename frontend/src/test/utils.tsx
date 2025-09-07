@@ -1,222 +1,227 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { render, RenderOptions } from '@testing-library/react'
-import { vi } from 'vitest'
+import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { VoiceProcessingProvider } from '@/contexts/VoiceProcessingContext'
+import { TTSProjectProvider } from '@/contexts/TTSProjectContext'
+import { SettingsProvider } from '@/contexts/SettingsContext'
+import { ThemeProvider } from '@/lib/theme-provider'
 
-// Mock API client
-export const mockApiClient = {
-  transcribeAudio: vi.fn(),
-  synthesizeSpeech: vi.fn(),
-  createVoiceClone: vi.fn(),
-  listVoiceClones: vi.fn(),
-  deleteVoiceClone: vi.fn(),
-  synthesizeWithClonedVoice: vi.fn(),
-  getVoiceCloneInfo: vi.fn(),
-  findSimilarVoices: vi.fn(),
-  extractVoiceEmbedding: vi.fn(),
-  getAvailableVoices: vi.fn(),
-  detectLanguage: vi.fn(),
-  translateText: vi.fn(),
-  getTranscriptionSession: vi.fn(),
-  getSynthesisSession: vi.fn(),
-  testStreaming: vi.fn(),
-  connectWebSocket: vi.fn(),
+// Mock implementations for providers
+const MockAuthProvider = ({ children }: { children: ReactNode }) => {
+  const mockAuthValue = {
+    user: null,
+    token: null,
+    login: jest.fn().mockResolvedValue(undefined),
+    logout: jest.fn(),
+    register: jest.fn().mockResolvedValue(undefined),
+    updateUser: jest.fn().mockResolvedValue(undefined),
+    changePassword: jest.fn().mockResolvedValue(undefined),
+    isLoading: false,
+    isAuthenticated: false,
+    isAdmin: false,
+    isModerator: false,
+  }
+
+  return (
+    <AuthProvider value={mockAuthValue}>
+      {children}
+    </AuthProvider>
+  )
 }
 
-// Mock the API client module
-vi.mock('../api/client', () => ({
-  apiClient: mockApiClient
-}))
+const MockVoiceProcessingProvider = ({ children }: { children: ReactNode }) => {
+  const mockValue = {
+    currentStep: 'upload',
+    audioFile: null,
+    selectedVoice: null,
+    processedAudio: null,
+    isProcessing: false,
+    error: null,
+    progress: 0,
+    setAudioFile: jest.fn(),
+    setSelectedVoice: jest.fn(),
+    startProcessing: jest.fn().mockResolvedValue(undefined),
+    resetProcessing: jest.fn(),
+    nextStep: jest.fn(),
+    previousStep: jest.fn(),
+  }
+
+  return (
+    <VoiceProcessingProvider value={mockValue}>
+      {children}
+    </VoiceProcessingProvider>
+  )
+}
+
+const MockTTSProjectProvider = ({ children }: { children: ReactNode }) => {
+  const mockValue = {
+    projects: [],
+    currentProject: null,
+    isLoading: false,
+    error: null,
+    createProject: jest.fn().mockResolvedValue(undefined),
+    updateProject: jest.fn().mockResolvedValue(undefined),
+    deleteProject: jest.fn().mockResolvedValue(undefined),
+    loadProjects: jest.fn().mockResolvedValue(undefined),
+    setCurrentProject: jest.fn(),
+    generateSpeech: jest.fn().mockResolvedValue(undefined),
+  }
+
+  return (
+    <TTSProjectProvider value={mockValue}>
+      {children}
+    </TTSProjectProvider>
+  )
+}
+
+const MockSettingsProvider = ({ children }: { children: ReactNode }) => {
+  const mockValue = {
+    theme: 'light' as const,
+    language: 'en',
+    notifications: true,
+    autoSave: true,
+    quality: 'high' as const,
+    updateSettings: jest.fn(),
+    resetSettings: jest.fn(),
+  }
+
+  return (
+    <SettingsProvider value={mockValue}>
+      {children}
+    </SettingsProvider>
+  )
+}
+
+// Full providers wrapper
+const AllTheProviders = ({ children }: { children: ReactNode }) => {
+  return (
+    <BrowserRouter>
+      <ThemeProvider>
+        <MockSettingsProvider>
+          <MockAuthProvider>
+            <MockTTSProjectProvider>
+              <MockVoiceProcessingProvider>
+                {children}
+              </MockVoiceProcessingProvider>
+            </MockTTSProjectProvider>
+          </MockAuthProvider>
+        </MockSettingsProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  )
+}
 
 // Custom render function
-const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return <>{children}</>
-}
-
 const customRender = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>,
+  options?: Omit<RenderOptions, 'wrapper'>
 ) => render(ui, { wrapper: AllTheProviders, ...options })
 
 export * from '@testing-library/react'
 export { customRender as render }
 
-// Test data factories
-export const createMockVoiceClone = (overrides = {}) => ({
-  clone_id: 'test-clone-123',
-  name: 'Test Voice Clone',
-  status: 'completed',
-  created_at: '2023-01-01T00:00:00Z',
-  ...overrides
-})
-
-export const createMockTranscriptionResponse = (overrides = {}) => ({
-  transcription: 'This is a test transcription',
-  language: 'en',
-  confidence: 0.95,
-  duration_seconds: 2.5,
-  model: 'whisper-large-v3-turbo',
-  session_id: 'test-session-123',
-  ...overrides
-})
-
-export const createMockSynthesisResponse = (overrides = {}) => ({
-  audio_path: '/test/audio/output.wav',
-  filename: 'output.wav',
-  text: 'Test synthesis text',
-  language: 'en',
-  voice_style: 'neutral',
-  emotion: 'neutral',
-  duration_seconds: 2.0,
-  sample_rate: 22050,
-  model: 'dia-tts',
-  encrypted: false,
-  session_id: 'test-synthesis-session',
-  ...overrides
-})
-
-export const createMockVoiceCloneResponse = (overrides = {}) => ({
-  clone_id: 'test-clone-123',
-  name: 'Test Voice Clone',
-  status: 'completed',
-  embedding_path: '/test/embeddings/clone.npy',
-  embedding_dimensions: 512,
-  sample_path: '/test/samples/clone.wav',
-  ...overrides
-})
-
-// Test file utilities
-export const createMockAudioFile = (name = 'test-audio.wav', size = 1024) => {
-  const file = new File(['test audio content'], name, {
-    type: 'audio/wav',
-    lastModified: Date.now(),
-  })
-  
-  Object.defineProperty(file, 'size', {
-    value: size,
-    writable: false,
-  })
-  
+// Test utilities
+export const createMockFile = (name: string, content: string, type: string): File => {
+  const file = new File([content], name, { type })
   return file
 }
 
-export const createMockImageFile = (name = 'test-image.png', size = 1024) => {
-  return new File(['test image content'], name, {
-    type: 'image/png',
-    lastModified: Date.now(),
+export const createMockAudioFile = (name = 'test.wav'): File => {
+  return createMockFile(name, 'mock-audio-content', 'audio/wav')
+}
+
+export const createMockUser = (overrides = {}) => ({
+  id: '1',
+  username: 'testuser',
+  email: 'test@example.com',
+  role: 'user',
+  status: 'active',
+  first_name: 'Test',
+  last_name: 'User',
+  profile_picture: null,
+  last_login: new Date().toISOString(),
+  created_at: new Date().toISOString(),
+  settings: {},
+  ...overrides,
+})
+
+export const createMockProject = (overrides = {}) => ({
+  id: '1',
+  name: 'Test Project',
+  text: 'Hello world',
+  voice_id: 'voice-1',
+  settings: {
+    speed: 1.0,
+    pitch: 1.0,
+    volume: 1.0,
+  },
+  status: 'draft',
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+  audio_url: null,
+  ...overrides,
+})
+
+export const createMockVoice = (overrides = {}) => ({
+  id: 'voice-1',
+  name: 'Test Voice',
+  gender: 'female',
+  language: 'en-US',
+  accent: 'american',
+  category: 'neural',
+  sample_url: 'http://example.com/sample.wav',
+  ...overrides,
+})
+
+// Mock API responses
+export const mockFetchSuccess = (data: any) => {
+  ;(global.fetch as jest.Mock).mockResolvedValue({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve(data),
+    text: () => Promise.resolve(JSON.stringify(data)),
   })
 }
 
-// Event utilities
-export const createMockChangeEvent = (files: File[]) => ({
-  target: {
-    files: {
-      0: files[0],
-      length: files.length,
-      item: (index: number) => files[index] || null,
-      [Symbol.iterator]: function* () {
-        for (const file of files) {
-          yield file
-        }
-      },
-    },
+export const mockFetchError = (status = 500, message = 'Internal Server Error') => {
+  ;(global.fetch as jest.Mock).mockResolvedValue({
+    ok: false,
+    status,
+    json: () => Promise.resolve({ detail: message }),
+    text: () => Promise.resolve(JSON.stringify({ detail: message })),
+  })
+}
+
+// Async utilities
+export const waitForLoadingToFinish = () => {
+  return new Promise(resolve => setTimeout(resolve, 0))
+}
+
+// Custom matchers for testing
+expect.extend({
+  toBeWithinRange(received: number, floor: number, ceiling: number) {
+    const pass = received >= floor && received <= ceiling
+    if (pass) {
+      return {
+        message: () =>
+          `expected ${received} not to be within range ${floor} - ${ceiling}`,
+        pass: true,
+      }
+    } else {
+      return {
+        message: () =>
+          `expected ${received} to be within range ${floor} - ${ceiling}`,
+        pass: false,
+      }
+    }
   },
 })
 
-// Audio utilities
-export const createMockAudioElement = () => ({
-  currentTime: 0,
-  duration: 10,
-  paused: true,
-  volume: 1,
-  play: vi.fn().mockResolvedValue(undefined),
-  pause: vi.fn(),
-  load: vi.fn(),
-  addEventListener: vi.fn(),
-  removeEventListener: vi.fn(),
-})
-
-// WebSocket utilities
-export const createMockWebSocket = () => ({
-  send: vi.fn(),
-  close: vi.fn(),
-  addEventListener: vi.fn(),
-  removeEventListener: vi.fn(),
-  readyState: WebSocket.OPEN,
-  CONNECTING: 0,
-  OPEN: 1,
-  CLOSING: 2,
-  CLOSED: 3,
-})
-
-// Local storage mock
-export const mockLocalStorage = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-}
-
-Object.defineProperty(window, 'localStorage', {
-  value: mockLocalStorage,
-})
-
-// Session storage mock
-export const mockSessionStorage = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-}
-
-Object.defineProperty(window, 'sessionStorage', {
-  value: mockSessionStorage,
-})
-
-// Cleanup function
-export const resetMocks = () => {
-  Object.values(mockApiClient).forEach(mock => {
-    if (vi.isMockFunction(mock)) {
-      mock.mockReset()
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toBeWithinRange(floor: number, ceiling: number): R
     }
-  })
-  
-  mockLocalStorage.getItem.mockReset()
-  mockLocalStorage.setItem.mockReset()
-  mockLocalStorage.removeItem.mockReset()
-  mockLocalStorage.clear.mockReset()
-  
-  mockSessionStorage.getItem.mockReset()
-  mockSessionStorage.setItem.mockReset()
-  mockSessionStorage.removeItem.mockReset()
-  mockSessionStorage.clear.mockReset()
-}
-
-// Wait for promises to resolve
-export const waitForPromises = () => new Promise(resolve => setTimeout(resolve, 0))
-
-// Test error boundary
-export class TestErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean; error?: Error }
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props)
-    this.state = { hasError: false }
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error }
-  }
-
-  componentDidCatch(error: Error, errorInfo: any) {
-    console.log('Error caught by boundary:', error, errorInfo)
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <div data-testid="error-boundary">Error occurred</div>
-    }
-
-    return this.props.children
   }
 }

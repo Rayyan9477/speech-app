@@ -38,13 +38,13 @@ const Slider: React.FC<SliderProps> = ({
         onChange={handleChange}
         disabled={disabled}
         className={cn(
-          "w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer",
-          "slider-thumb:appearance-none slider-thumb:h-4 slider-thumb:w-4 slider-thumb:bg-blue-500 slider-thumb:rounded-full slider-thumb:cursor-pointer",
-          "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50",
+          "w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer",
+          "slider-thumb:appearance-none slider-thumb:h-4 slider-thumb:w-4 slider-thumb:bg-primary slider-thumb:rounded-full slider-thumb:cursor-pointer",
+          "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50",
           disabled && "opacity-50 cursor-not-allowed"
         )}
         style={{
-          background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`
+          background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${percentage}%, hsl(var(--muted)) ${percentage}%, hsl(var(--muted)) 100%)`
         }}
       />
     </div>

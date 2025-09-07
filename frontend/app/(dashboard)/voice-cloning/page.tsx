@@ -444,7 +444,7 @@ export default function VoiceCloningPage() {
                       <div>
                         <p className="text-sm font-medium text-yellow-800">Processing Time</p>
                         <p className="text-sm text-yellow-700">
-                          Voice cloning typically takes 10-15 minutes. You'll receive a notification when complete.
+                          Voice cloning typically takes 10-15 minutes. You&apos;ll receive a notification when complete.
                         </p>
                       </div>
                     </div>
@@ -470,7 +470,7 @@ export default function VoiceCloningPage() {
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900">Voice Clone Ready!</h3>
                     <p className="text-gray-600">
-                      Your custom voice "{cloneName || 'My Voice'}" has been created successfully
+                      Your custom voice &quot;{cloneName || 'My Voice'}&quot; has been created successfully
                     </p>
                   </div>
                 </div>

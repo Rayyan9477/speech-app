@@ -1,10 +1,32 @@
 import '@testing-library/jest-dom'
 import { vi } from 'vitest'
 
-// Mock HTMLMediaElement methods
+// Mock localStorage
+const mockStorage = (() => {
+  let store: Record<string, string> = {}
+  return {
+    getItem: (key: string) => store[key] ?? null,
+    setItem: (key: string, value: string) => { store[key] = value },
+    removeItem: (key: string) => { delete store[key] },
+    clear: () => { store = {} },
+    length: Object.keys(store).length,
+    key: (index: number) => Object.keys(store)[index] ?? null
+  }
+})()
+
+Object.defineProperty(window, 'localStorage', {
+  value: mockStorage
+})
+
+// Mock sessionStorage
+Object.defineProperty(window, 'sessionStorage', {
+  value: mockStorage
+})
+
+// Mock HTMLMediaElement
 Object.defineProperty(window.HTMLMediaElement.prototype, 'play', {
   writable: true,
-  value: vi.fn().mockImplementation(() => Promise.resolve()),
+  value: vi.fn().mockResolvedValue(undefined),
 })
 
 Object.defineProperty(window.HTMLMediaElement.prototype, 'pause', {
@@ -17,83 +39,8 @@ Object.defineProperty(window.HTMLMediaElement.prototype, 'load', {
   value: vi.fn(),
 })
 
-// Mock AudioContext for audio-related tests
-global.AudioContext = vi.fn().mockImplementation(() => ({
-  createAnalyser: vi.fn(),
-  createGain: vi.fn(),
-  createScriptProcessor: vi.fn(),
-  createMediaStreamSource: vi.fn(),
-  close: vi.fn(),
-  resume: vi.fn(),
-  suspend: vi.fn(),
-}))
-
-// Mock MediaRecorder
-global.MediaRecorder = vi.fn().mockImplementation(() => ({
-  start: vi.fn(),
-  stop: vi.fn(),
-  pause: vi.fn(),
-  resume: vi.fn(),
-  requestData: vi.fn(),
-  addEventListener: vi.fn(),
-  removeEventListener: vi.fn(),
-  dispatchEvent: vi.fn(),
-  state: 'inactive',
-  mimeType: 'audio/webm',
-  ondataavailable: null,
-  onerror: null,
-  onpause: null,
-  onresume: null,
-  onstart: null,
-  onstop: null,
-}))
-
-// Mock navigator.mediaDevices
-Object.defineProperty(navigator, 'mediaDevices', {
-  writable: true,
-  value: {
-    getUserMedia: vi.fn().mockResolvedValue({
-      getTracks: vi.fn().mockReturnValue([
-        { stop: vi.fn() }
-      ])
-    }),
-    enumerateDevices: vi.fn().mockResolvedValue([]),
-  },
-})
-
 // Mock fetch
 global.fetch = vi.fn()
-
-// Mock URL.createObjectURL
-global.URL.createObjectURL = vi.fn().mockReturnValue('mocked-url')
-global.URL.revokeObjectURL = vi.fn()
-
-// Mock File API
-global.File = vi.fn().mockImplementation((bits, name, options) => ({
-  name,
-  size: bits ? bits.join('').length : 0,
-  type: options?.type || '',
-  lastModified: Date.now(),
-  slice: vi.fn(),
-  stream: vi.fn(),
-  text: vi.fn(),
-  arrayBuffer: vi.fn(),
-}))
-
-global.FileReader = vi.fn().mockImplementation(() => ({
-  readAsArrayBuffer: vi.fn(),
-  readAsDataURL: vi.fn(),
-  readAsText: vi.fn(),
-  abort: vi.fn(),
-  addEventListener: vi.fn(),
-  removeEventListener: vi.fn(),
-  EMPTY: 0,
-  LOADING: 1,
-  DONE: 2,
-  readyState: 0,
-  result: null,
-  error: null,
-}))
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -109,55 +56,53 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }))
 
-// Mock window.speechSynthesis for TTS tests
-Object.defineProperty(window, 'speechSynthesis', {
+// Mock matchMedia
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: {
-    speak: vi.fn(),
-    cancel: vi.fn(),
-    pause: vi.fn(),
-    resume: vi.fn(),
-    getVoices: vi.fn().mockReturnValue([]),
-    speaking: false,
-    pending: false,
-    paused: false,
-  },
+  value: vi.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
 })
 
-// Mock WebSocket
-global.WebSocket = vi.fn().mockImplementation(() => ({
-  close: vi.fn(),
-  send: vi.fn(),
+// Mock URL.createObjectURL
+global.URL.createObjectURL = vi.fn(() => 'mock-object-url')
+global.URL.revokeObjectURL = vi.fn()
+
+// Mock file reader
+global.FileReader = class {
+  result: string | ArrayBuffer | null = null
+  readAsDataURL = vi.fn()
+  readAsText = vi.fn()
+  readAsArrayBuffer = vi.fn()
+  addEventListener = vi.fn()
+  removeEventListener = vi.fn()
+  onload: ((event: ProgressEvent<FileReader>) => void) | null = null
+  onerror: ((event: ProgressEvent<FileReader>) => void) | null = null
+  onloadend: ((event: ProgressEvent<FileReader>) => void) | null = null
+}
+
+// Mock speech recognition APIs
+global.webkitSpeechRecognition = vi.fn().mockImplementation(() => ({
+  continuous: false,
+  interimResults: false,
+  lang: 'en-US',
+  start: vi.fn(),
+  stop: vi.fn(),
   addEventListener: vi.fn(),
   removeEventListener: vi.fn(),
-  readyState: WebSocket.CONNECTING,
-  CONNECTING: 0,
-  OPEN: 1,
-  CLOSING: 2,
-  CLOSED: 3,
 }))
 
-// Suppress console warnings in tests
-const originalWarn = console.warn
-const originalError = console.error
+global.SpeechRecognition = global.webkitSpeechRecognition
 
-beforeAll(() => {
-  console.warn = (...args) => {
-    if (typeof args[0] === 'string' && args[0].includes('Warning:')) {
-      return
-    }
-    originalWarn(...args)
-  }
-  
-  console.error = (...args) => {
-    if (typeof args[0] === 'string' && args[0].includes('Warning:')) {
-      return
-    }
-    originalError(...args)
-  }
-})
-
-afterAll(() => {
-  console.warn = originalWarn
-  console.error = originalError
+// Clean up after each test
+afterEach(() => {
+  mockStorage.clear()
+  vi.clearAllMocks()
 })

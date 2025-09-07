@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert, SafeAreaView, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import type { RootStackScreenProps } from '../types/navigation';
 import { useTheme } from '../lib/theme-provider';
 import { Colors, Typography, Spacing, BorderRadius } from '../../../shared/design-system';
 import Button from '../components/ui/Button';
@@ -9,21 +10,47 @@ import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<RootStackScreenProps<'Login'>['navigation']>();
   const { colors, isDark } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
-    // TODO: Implement actual login logic
-    navigation.navigate('MainApp' as never);
+    setIsLoading(true);
+    
+    try {
+      // TODO: Replace with actual API endpoint
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Authentication failed');
+      }
+
+      const data = await response.json();
+      
+      // TODO: Implement secure token storage
+      // await AsyncStorage.setItem('authToken', data.token);
+      
+      navigation.navigate('MainApp');
+    } catch (error) {
+      Alert.alert('Error', 'Invalid credentials. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSocialLogin = (provider: string) => {
@@ -95,7 +122,7 @@ const LoginScreen = () => {
               variant="ghost"
               size="small"
               textStyle={[styles.forgotText, { color: Colors.primary[500] }]}
-              onPress={() => navigation.navigate('ForgotPassword' as never)}
+              onPress={() => navigation.navigate('ForgotPassword')}
             />
           </View>
 
@@ -138,10 +165,11 @@ const LoginScreen = () => {
 
           {/* Login Button */}
           <Button
-            title="Log in"
+            title={isLoading ? "Logging in..." : "Log in"}
             variant="gradient"
             size="large"
             fullWidth
+            disabled={isLoading}
             style={styles.loginButton}
             onPress={handleLogin}
           />

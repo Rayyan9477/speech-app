@@ -53,7 +53,7 @@ const ProjectDeleteConfirmation: React.FC = () => {
                 Delete Project?
               </h3>
               <p className="text-muted-foreground mb-6">
-                Are you sure you want to delete "{state.selectedProject.title}"? 
+                Are you sure you want to delete &quot;{state.selectedProject.title}&quot;? 
                 This action cannot be undone and will permanently remove the project and all its data.
               </p>
 

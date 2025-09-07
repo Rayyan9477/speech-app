@@ -134,7 +134,7 @@ const Walkthrough = () => {
                       <div className="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm">
                         <div className="text-2xl mb-2">🎤</div>
                         <h4 className="font-medium text-xs mb-1">AI Voice Changer</h4>
-                        <p className="text-xs text-gray-500 mb-2">Change your voice to someone else's voice.</p>
+                        <p className="text-xs text-gray-500 mb-2">Change your voice to someone else&apos;s voice.</p>
                         <Button size="sm" variant="outline" className="text-xs px-3 py-1 h-auto">Create</Button>
                       </div>
                       

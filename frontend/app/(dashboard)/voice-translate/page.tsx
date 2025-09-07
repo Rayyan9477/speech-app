@@ -361,7 +361,7 @@ export default function VoiceTranslatePage() {
         >
           <h3 className="font-medium text-blue-900 mb-2">🌟 Advanced Features</h3>
           <ul className="text-sm text-blue-800 space-y-1">
-            <li>• Preserves original speaker's tone and emotion</li>
+            <li>• Preserves original speaker&apos;s tone and emotion</li>
             <li>• Real-time translation with 98% accuracy</li>
             <li>• Support for 50+ languages and dialects</li>
             <li>• Batch processing for multiple files</li>

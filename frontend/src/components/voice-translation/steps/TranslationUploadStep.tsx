@@ -188,7 +188,7 @@ const TranslationUploadStep: React.FC<TranslationUploadStepProps> = ({
                   Upload Your Audio File
                 </h3>
                 <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                  Drop your audio file here or click to browse. We'll translate it to your chosen language.
+                  Drop your audio file here or click to browse. We&apos;ll translate it to your chosen language.
                 </p>
               </div>
               

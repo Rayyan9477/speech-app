@@ -218,7 +218,7 @@ const MultiStepSignUp = () => {
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-foreground mb-2">What's your role?</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-2">What&apos;s your role?</h2>
               <p className="text-muted-foreground">Help us personalize your experience</p>
             </div>
 

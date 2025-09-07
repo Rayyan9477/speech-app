@@ -538,7 +538,7 @@ const TTSExportWorkflow: React.FC<TTSExportWorkflowProps> = ({
           {currentStep === 'exporting' && (
             <div className="w-full text-center">
               <p className="text-sm text-muted-foreground">
-                Please don't close this window...
+                Please don&apos;t close this window...
               </p>
             </div>
           )}

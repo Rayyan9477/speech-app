@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { apiClient } from '../../api/client';
@@ -28,7 +28,7 @@ const VoiceCloneList: React.FC<VoiceCloneListProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const loadVoiceClones = async () => {
+  const loadVoiceClones = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await apiClient.listVoiceClones();
@@ -39,11 +39,11 @@ const VoiceCloneList: React.FC<VoiceCloneListProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [onError]);
 
   useEffect(() => {
     loadVoiceClones();
-  }, [refresh]);
+  }, [refresh, loadVoiceClones]);
 
   const handleDeleteClone = async (cloneId: string, cloneName: string) => {
     if (!confirm(`Are you sure you want to delete "${cloneName}"? This action cannot be undone.`)) {

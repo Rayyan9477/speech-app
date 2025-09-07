@@ -181,7 +181,7 @@ const TranslationResultsStep: React.FC<TranslationResultsStepProps> = ({
             Translation Complete!
           </h3>
           <p className="text-muted-foreground">
-            Translating the audio sound "{job.sourceAudio.name}" is complete!
+            Translating the audio sound &quot;{job.sourceAudio.name}&quot; is complete!
           </p>
         </div>
       </Card>

@@ -1,0 +1,52 @@
+{
+  "name": "speech-app-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for speech processing application",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --ci --coverage --watchAll=false",
+    "test:debug": "jest --detectOpenHandles --forceExit",
+    "test:visual": "jest --testNamePattern='visual regression'",
+    "test:accessibility": "jest --testNamePattern='accessibility'",
+    "test:performance": "jest --testNamePattern='performance'",
+    "test:cross-browser": "jest --testNamePattern='cross browser'",
+    "start:test-servers": "concurrently \"npm run start:frontend\" \"npm run start:backend\" \"npm run start:mobile\"",
+    "start:frontend": "cd ../frontend && npm run dev",
+    "start:backend": "cd ../backend && npm run dev",
+    "start:mobile": "cd ../mobile && npm run web",
+    "pretest": "npm run check:servers",
+    "check:servers": "node scripts/check-servers.js"
+  },
+  "dependencies": {
+    "puppeteer": "^21.11.0",
+    "@types/puppeteer": "^7.0.4",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.12",
+    "jest-puppeteer": "^10.0.1",
+    "@types/jest-puppeteer": "^5.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.4",
+    "jest-environment-puppeteer": "^5.0.4",
+    "jest-environment-node": "^29.7.0",
+    "jest-image-snapshot": "^6.4.0",
+    "@types/jest-image-snapshot": "^6.4.0",
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0",
+    "lighthouse": "^11.5.0",
+    "axe-core": "^4.8.4",
+    "@axe-core/puppeteer": "^4.8.4",
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.5",
+    "prettier": "^3.2.5",
+    "eslint": "^8.54.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0"
+  }
+}

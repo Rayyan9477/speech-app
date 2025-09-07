@@ -53,7 +53,7 @@ const VoiceDeleteConfirmation: React.FC = () => {
                 Delete Voice?
               </h3>
               <p className="text-muted-foreground mb-6">
-                Are you sure you want to delete "{state.selectedVoice.name}"? 
+                Are you sure you want to delete &quot;{state.selectedVoice.name}&quot;? 
                 This action cannot be undone and will permanently remove the voice 
                 and all its training data.
               </p>
