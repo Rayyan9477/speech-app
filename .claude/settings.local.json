@@ -81,7 +81,8 @@
       "Bash(npx vitest:*)",
       "Read(//r//**)",
       "Bash(timeout 10s npm run dev)",
-      "Bash(timeout 5s npm run dev)"
+      "Bash(timeout 5s npm run dev)",
+      "Bash(npm cache clean:*)"
     ],
     "deny": [],
     "ask": []

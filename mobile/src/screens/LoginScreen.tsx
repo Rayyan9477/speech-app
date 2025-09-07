@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Alert, SafeAreaView, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useTheme } from '../lib/theme-provider';
+import { Colors, Typography, Spacing, BorderRadius } from '../../../shared/design-system';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import Card from '../components/ui/Card';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const { colors, isDark } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = () => {
     if (!email || !password) {
@@ -19,75 +26,127 @@ const LoginScreen = () => {
     navigation.navigate('MainApp' as never);
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {/* Back Button */}
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <MaterialIcons name="arrow-back" size={24} color="#6B7280" />
-        </TouchableOpacity>
+  const handleSocialLogin = (provider: string) => {
+    // TODO: Implement social login
+    console.log(`Login with ${provider}`);
+  };
 
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Welcome Back</Text>
-          <Text style={styles.subtitle}>Sign in to your Voicify account</Text>
+          <Button
+            title=""
+            icon="arrow-back"
+            variant="ghost"
+            size="small"
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          />
+          
+          <View style={styles.welcomeSection}>
+            <Text style={[styles.welcomeTitle, { color: colors.text.primary }]}>
+              Welcome Back! 👋
+            </Text>
+            <Text style={[styles.welcomeSubtitle, { color: colors.text.secondary }]}>
+              Let the Creativity Continue
+            </Text>
+          </View>
         </View>
 
-        {/* Form */}
-        <View style={styles.form}>
-          <View style={styles.inputContainer}>
-            <MaterialIcons name="email" size={20} color="#6B7280" style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Email Address"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
+        {/* Login Form */}
+        <View style={styles.formContainer}>
+          <Text style={[styles.fieldLabel, { color: colors.text.primary }]}>Email</Text>
+          <Input
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            leftIcon="email"
+            containerStyle={styles.inputContainer}
+          />
+
+          <Text style={[styles.fieldLabel, { color: colors.text.primary }]}>Password</Text>
+          <Input
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            leftIcon="lock"
+            rightIcon={showPassword ? 'visibility-off' : 'visibility'}
+            onRightIconPress={() => setShowPassword(!showPassword)}
+            containerStyle={styles.inputContainer}
+          />
+
+          {/* Remember Me & Forgot Password */}
+          <View style={styles.optionsRow}>
+            <Button
+              title={rememberMe ? "✓ Remember me" : "Remember me"}
+              variant="ghost"
+              size="small"
+              style={styles.rememberButton}
+              textStyle={[styles.rememberText, { color: colors.text.secondary }]}
+              onPress={() => setRememberMe(!rememberMe)}
+            />
+            <Button
+              title="Forgot Password?"
+              variant="ghost"
+              size="small"
+              textStyle={[styles.forgotText, { color: Colors.primary[500] }]}
+              onPress={() => navigation.navigate('ForgotPassword' as never)}
             />
           </View>
 
-          <View style={styles.inputContainer}>
-            <MaterialIcons name="lock" size={20} color="#6B7280" style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-            />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={styles.eyeButton}
-            >
-              <MaterialIcons
-                name={showPassword ? 'visibility-off' : 'visibility'}
-                size={20}
-                color="#6B7280"
-              />
-            </TouchableOpacity>
+          {/* Divider */}
+          <View style={styles.dividerContainer}>
+            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+            <Text style={[styles.dividerText, { color: colors.text.secondary }]}>or</Text>
+            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
           </View>
 
-          <TouchableOpacity style={styles.forgotPassword}>
-            <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
-          </TouchableOpacity>
+          {/* Social Login Buttons */}
+          <View style={styles.socialButtonsContainer}>
+            <Button
+              title="Continue with Google"
+              variant="outline"
+              icon="g-translate"
+              style={styles.socialButton}
+              textStyle={[styles.socialButtonText, { color: colors.text.primary }]}
+              onPress={() => handleSocialLogin('Google')}
+            />
+            
+            <Button
+              title="Continue with Apple"
+              variant="outline"
+              icon="phone-iphone"
+              style={styles.socialButton}
+              textStyle={[styles.socialButtonText, { color: colors.text.primary }]}
+              onPress={() => handleSocialLogin('Apple')}
+            />
+            
+            <Button
+              title="Continue with Facebook"
+              variant="outline"
+              icon="facebook"
+              style={styles.socialButton}
+              textStyle={[styles.socialButtonText, { color: colors.text.primary }]}
+              onPress={() => handleSocialLogin('Facebook')}
+            />
+          </View>
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>Sign In</Text>
-          </TouchableOpacity>
+          {/* Login Button */}
+          <Button
+            title="Log in"
+            variant="gradient"
+            size="large"
+            fullWidth
+            style={styles.loginButton}
+            onPress={handleLogin}
+          />
         </View>
-
-        {/* Sign Up Link */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Signup' as never)}>
-            <Text style={styles.signUpLink}>Sign up</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -95,90 +154,88 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
   },
-  content: {
+  scrollView: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 20,
-  },
-  backButton: {
-    marginBottom: 20,
   },
   header: {
+    paddingHorizontal: Spacing[6],
+    paddingTop: Spacing[4],
+    paddingBottom: Spacing[8],
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    marginBottom: Spacing[6],
+  },
+  welcomeSection: {
     alignItems: 'center',
-    marginBottom: 40,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#6B7280',
+  welcomeTitle: {
+    fontSize: Typography.fontSize['3xl'],
+    fontWeight: Typography.fontWeight.bold,
     textAlign: 'center',
-    lineHeight: 24,
+    marginBottom: Spacing[2],
   },
-  form: {
-    marginBottom: 40,
+  welcomeSubtitle: {
+    fontSize: Typography.fontSize.base,
+    textAlign: 'center',
+    lineHeight: Typography.lineHeight.relaxed * Typography.fontSize.base,
+  },
+  formContainer: {
+    paddingHorizontal: Spacing[6],
+    paddingBottom: Spacing[8],
+  },
+  fieldLabel: {
+    fontSize: Typography.fontSize.base,
+    fontWeight: Typography.fontWeight.medium,
+    marginBottom: Spacing[2],
+    marginTop: Spacing[2],
   },
   inputContainer: {
+    marginBottom: Spacing[4],
+  },
+  optionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing[8],
+  },
+  rememberButton: {
+    paddingHorizontal: 0,
+  },
+  rememberText: {
+    fontSize: Typography.fontSize.sm,
+  },
+  forgotText: {
+    fontSize: Typography.fontSize.sm,
+    fontWeight: Typography.fontWeight.medium,
+  },
+  dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginBottom: 16,
-    backgroundColor: '#F9FAFB',
+    marginVertical: Spacing[8],
   },
-  inputIcon: {
-    marginRight: 12,
-  },
-  input: {
+  dividerLine: {
     flex: 1,
-    fontSize: 16,
-    color: '#1F2937',
+    height: 1,
   },
-  eyeButton: {
-    marginLeft: 8,
+  dividerText: {
+    marginHorizontal: Spacing[4],
+    fontSize: Typography.fontSize.sm,
   },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-    marginBottom: 24,
+  socialButtonsContainer: {
+    gap: Spacing[3],
+    marginBottom: Spacing[8],
   },
-  forgotPasswordText: {
-    color: '#5546FF',
-    fontSize: 14,
-    fontWeight: '500',
+  socialButton: {
+    borderRadius: BorderRadius.lg,
+  },
+  socialButtonText: {
+    fontSize: Typography.fontSize.base,
+    fontWeight: Typography.fontWeight.medium,
   },
   loginButton: {
-    backgroundColor: '#5546FF',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  loginButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 16,
-    color: '#6B7280',
-  },
-  signUpLink: {
-    color: '#5546FF',
-    fontSize: 16,
-    fontWeight: '600',
+    borderRadius: BorderRadius.lg,
   },
 });
 

@@ -206,6 +206,10 @@ const SettingsScreen = () => {
       return;
     }
 
+    if (!item.action) {
+      return;
+    }
+
     switch (item.action) {
       case 'profile':
         Alert.alert('Profile', 'Profile management coming soon!');
@@ -267,7 +271,7 @@ const SettingsScreen = () => {
     <TouchableOpacity
       key={`${sectionIndex}-${itemIndex}`}
       style={styles.settingItem}
-      onPress={() => item.action && handleSettingPress(item.action)}
+      onPress={() => handleSettingPress(item)}
       disabled={item.type === 'switch'}
     >
       <View style={styles.settingLeft}>

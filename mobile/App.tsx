@@ -3,9 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
-import { ThemeProvider } from './src/lib/theme-provider';
+import { ThemeProvider, useTheme } from './src/lib/theme-provider';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Colors, Spacing, BorderRadius } from './shared/design-system';
 
 // Screens
 import WelcomeScreen from './src/screens/WelcomeScreen';
@@ -42,86 +43,110 @@ import RemoveTeammateConfirmationScreen from './src/screens/user-management/Remo
 import RemoveTeammateSuccessScreen from './src/screens/user-management/RemoveTeammateSuccessScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
 
+// New Enhanced Screens
+import SplashScreen from './src/screens/SplashScreen';
+import WalkthroughScreen from './src/screens/WalkthroughScreen';
+import MultiStepSignupScreen from './src/screens/MultiStepSignupScreen';
+import SignupCompleteScreen from './src/screens/SignupCompleteScreen';
+import TTSProjectCreationScreen from './src/screens/TTSProjectCreationScreen';
+import EnhancedTTSEditorScreen from './src/screens/EnhancedTTSEditorScreen';
+import VoiceManagementScreen from './src/screens/VoiceManagementScreen';
+import EnhancedProjectManagementScreen from './src/screens/EnhancedProjectManagementScreen';
+import ComprehensiveSettingsScreen from './src/screens/ComprehensiveSettingsScreen';
+import AudioSharingScreen from './src/screens/AudioSharingScreen';
+import AudioLibraryScreen from './src/screens/AudioLibraryScreen';
+import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
+  const { colors, isDark } = useTheme();
+
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#ffffff',
-          borderTopColor: '#e5e5e5',
-          borderTopWidth: 1,
-          paddingBottom: 5,
-          paddingTop: 5,
-          height: 60,
+          backgroundColor: colors.card,
+          borderTopWidth: 0,
+          elevation: isDark ? 8 : 12,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: -2,
+          },
+          shadowOpacity: isDark ? 0.25 : 0.1,
+          shadowRadius: 12,
+          paddingBottom: Spacing[2],
+          paddingTop: Spacing[2],
+          height: 70,
+          paddingHorizontal: Spacing[4],
         },
-        tabBarActiveTintColor: '#5546FF',
-        tabBarInactiveTintColor: '#9CA3AF',
-      }}
+        tabBarActiveTintColor: Colors.primary[500],
+        tabBarInactiveTintColor: colors.text.tertiary,
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '500',
+          marginTop: 2,
+        },
+        tabBarIconStyle: {
+          marginTop: 2,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 4,
+        },
+      })}
     >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="home" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialIcons 
+              name={focused ? "home" : "home"} 
+              size={24} 
+              color={color} 
+            />
           ),
         }}
       />
       <Tab.Screen
-        name="TTS"
-        component={TTSScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="volume-up" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Voice Changer"
-        component={VoiceChangerScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="mic" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Translate"
-        component={VoiceTranslateScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="translate" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Library"
+        name="My Voices"
         component={VoiceLibraryScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="library-music" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialIcons 
+              name={focused ? "record-voice-over" : "record-voice-over"} 
+              size={24} 
+              color={color} 
+            />
           ),
         }}
       />
       <Tab.Screen
-        name="Projects"
+        name="My Projects"
         component={ProjectsScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="work" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialIcons 
+              name={focused ? "work" : "work-outline"} 
+              size={24} 
+              color={color} 
+            />
           ),
         }}
       />
       <Tab.Screen
-        name="Settings"
+        name="Account"
         component={SettingsScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="settings" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialIcons 
+              name={focused ? "person" : "person-outline"} 
+              size={24} 
+              color={color} 
+            />
           ),
         }}
       />
@@ -135,15 +160,41 @@ export default function App() {
       <ThemeProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Welcome"
+            initialRouteName="Splash"
             screenOptions={{
               headerShown: false,
             }}
           >
+            {/* Enhanced Authentication Flow */}
+            <Stack.Screen name="Splash" component={SplashScreen} />
+            <Stack.Screen name="Walkthrough" component={WalkthroughScreen} />
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />
+            <Stack.Screen name="MultiStepSignup" component={MultiStepSignupScreen} />
+            <Stack.Screen name="SignupComplete" component={SignupCompleteScreen} />
             <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
+            
+            {/* Enhanced TTS Workflow */}
+            <Stack.Screen name="TTSProjectCreation" component={TTSProjectCreationScreen} />
+            <Stack.Screen name="TTSEditor" component={EnhancedTTSEditorScreen} />
+            
+            {/* Audio Management */}
+            <Stack.Screen name="AudioPlayer" component={AudioPlayerScreen} />
+            <Stack.Screen name="AudioSharing" component={AudioSharingScreen} />
+            <Stack.Screen name="AudioLibrary" component={AudioLibraryScreen} />
+            
+            {/* Enhanced Voice Management */}
+            <Stack.Screen name="VoiceManagement" component={VoiceManagementScreen} />
+            
+            {/* Enhanced Project Management */}
+            <Stack.Screen name="EnhancedProjects" component={EnhancedProjectManagementScreen} />
+            
+            {/* Comprehensive Settings */}
+            <Stack.Screen name="ComprehensiveSettings" component={ComprehensiveSettingsScreen} />
+            
+            {/* Original Screens */}
             <Stack.Screen name="Projects" component={ProjectsScreen} />
             <Stack.Screen name="CreateProject" component={CreateProjectScreen} />
             <Stack.Screen name="ProjectDetail" component={ProjectDetailScreen} />
@@ -154,7 +205,6 @@ export default function App() {
             <Stack.Screen name="VoiceCloningRecord" component={VoiceCloningRecordScreen} />
             <Stack.Screen name="VoiceCloningProcessing" component={VoiceCloningProcessingScreen} />
             <Stack.Screen name="VoiceCloningIdentity" component={VoiceCloningIdentityScreen} />
-            <Stack.Screen name="AudioPlayer" component={AudioPlayerScreen} />
             <Stack.Screen name="Help" component={HelpScreen} />
             <Stack.Screen name="FAQ" component={FAQScreen} />
             <Stack.Screen name="ContactSupport" component={HelpScreen} />

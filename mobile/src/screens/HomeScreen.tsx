@@ -2,91 +2,179 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { motion } from 'framer-motion';
+import { useTheme } from '../lib/theme-provider';
+import { Colors, Typography, Spacing, BorderRadius } from '../../../shared/design-system';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const { colors, isDark } = useTheme();
 
   const features = [
     {
-      title: 'Text to Speech',
-      description: 'Convert text to natural speech',
+      title: 'AI Text to Speech',
+      description: 'Convert your text into stunning speech.',
       icon: 'volume-up',
       screen: 'TTS',
+      gradientColors: ['#5546FF', '#7D8BFF'],
     },
     {
-      title: 'Voice Changer',
-      description: 'Modify your voice in real-time',
+      title: 'AI Voice Changer',
+      description: 'Change your voice to someone else\'s voice.',
       icon: 'mic',
       screen: 'Voice Changer',
+      gradientColors: ['#22C55E', '#4ADE80'],
     },
     {
-      title: 'Voice Translate',
-      description: 'Translate speech across languages',
+      title: 'AI Voice Translate',
+      description: 'Translate your voice into another language.',
       icon: 'translate',
       screen: 'Translate',
-    },
-    {
-      title: 'Voice Library',
-      description: 'Access your saved voices',
-      icon: 'library-music',
-      screen: 'Library',
+      gradientColors: ['#F59E0B', '#FBBF24'],
     },
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.welcomeText}>Welcome back!</Text>
-          <Text style={styles.subtitle}>Ready to transform your voice with AI?</Text>
+          <View style={styles.headerTop}>
+            <MaterialIcons 
+              name="menu" 
+              size={24} 
+              color={colors.text.primary} 
+            />
+            <Text style={[styles.headerTitle, { color: colors.text.primary }]}>
+              Voicify
+            </Text>
+            <TouchableOpacity>
+              <MaterialIcons 
+                name="notifications" 
+                size={24} 
+                color={colors.text.primary} 
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
-        {/* Quick Actions */}
+        {/* Upgrade to Pro Card */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.grid}>
+          <Card variant="gradient" gradientColors={['#5546FF', '#7D8BFF']}>
+            <View style={styles.upgradeCard}>
+              <View style={styles.upgradeContent}>
+                <View style={styles.crownIcon}>
+                  <MaterialIcons name="star" size={24} color="#FFC107" />
+                </View>
+                <Text style={styles.upgradeTitle}>Upgrade to Pro!</Text>
+                <Text style={styles.upgradeSubtitle}>
+                  Enjoy all benefits without any restrictions
+                </Text>
+                <Button
+                  title="Upgrade"
+                  variant="secondary"
+                  size="small"
+                  style={styles.upgradeButton}
+                  textStyle={{ color: Colors.primary[500] }}
+                  onPress={() => {}}
+                />
+              </View>
+              <View style={styles.upgradeAvatars}>
+                {/* User avatars would go here */}
+              </View>
+            </View>
+          </Card>
+        </View>
+
+        {/* Main Features */}
+        <View style={styles.section}>
+          <View style={styles.featuresGrid}>
             {features.map((feature, index) => (
               <TouchableOpacity
                 key={index}
-                style={styles.card}
+                style={styles.featureCard}
                 onPress={() => navigation.navigate(feature.screen as never)}
+                activeOpacity={0.8}
               >
-                <View style={styles.cardIcon}>
-                  <MaterialIcons name={feature.icon as any} size={32} color="#5546FF" />
-                </View>
-                <Text style={styles.cardTitle}>{feature.title}</Text>
-                <Text style={styles.cardDescription}>{feature.description}</Text>
+                <Card variant="default" style={{ flex: 1 }}>
+                  <View style={styles.featureContent}>
+                    <View style={[styles.featureIcon, { backgroundColor: feature.gradientColors[0] + '20' }]}>
+                      <MaterialIcons 
+                        name={feature.icon as any} 
+                        size={28} 
+                        color={feature.gradientColors[0]} 
+                      />
+                    </View>
+                    <Text style={[styles.featureTitle, { color: colors.text.primary }]}>
+                      {feature.title}
+                    </Text>
+                    <Text style={[styles.featureDescription, { color: colors.text.secondary }]}>
+                      {feature.description}
+                    </Text>
+                    <Button
+                      title="Create"
+                      variant="gradient"
+                      size="small"
+                      style={styles.createButton}
+                      onPress={() => navigation.navigate(feature.screen as never)}
+                    />
+                  </View>
+                </Card>
               </TouchableOpacity>
             ))}
           </View>
         </View>
 
-        {/* Stats */}
+        {/* Explore AI Voices Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>This Week</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
-              <MaterialIcons name="work" size={24} color="#22C55E" />
-              <Text style={styles.statNumber}>24</Text>
-              <Text style={styles.statLabel}>Projects</Text>
-            </View>
-            <View style={styles.statCard}>
-              <MaterialIcons name="volume-up" size={24} color="#7C3AED" />
-              <Text style={styles.statNumber}>156</Text>
-              <Text style={styles.statLabel}>Audio Files</Text>
-            </View>
-            <View style={styles.statCard}>
-              <MaterialIcons name="translate" size={24} color="#22C55E" />
-              <Text style={styles.statNumber}>12</Text>
-              <Text style={styles.statLabel}>Languages</Text>
-            </View>
-            <View style={styles.statCard}>
-              <MaterialIcons name="mic" size={24} color="#F59E0B" />
-              <Text style={styles.statNumber}>8</Text>
-              <Text style={styles.statLabel}>Voices</Text>
-            </View>
+          <View style={styles.sectionHeader}>
+            <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
+              Explore AI Voices
+            </Text>
+            <TouchableOpacity>
+              <Text style={[styles.viewAllButton, { color: Colors.primary[500] }]}>
+                View All
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.voicesGrid}>
+            {[
+              { name: 'Olivia (F) 🇺🇸', age: 'Young' },
+              { name: 'Samuel (M) 🇺🇸', age: 'Middle-Aged' },
+            ].map((voice, index) => (
+              <Card key={index} variant="default" style={styles.voiceCard}>
+                <View style={styles.voiceContent}>
+                  <View style={[styles.voiceAvatar, { backgroundColor: index === 0 ? '#FE7A36' : '#9C27B0' }]}>
+                    <Text style={styles.voiceAvatarText}>
+                      {voice.name.charAt(0)}
+                    </Text>
+                  </View>
+                  <Text style={[styles.voiceName, { color: colors.text.primary }]}>
+                    {voice.name}
+                  </Text>
+                  <Text style={[styles.voiceAge, { color: colors.text.secondary }]}>
+                    {voice.age}
+                  </Text>
+                  <View style={styles.voiceActions}>
+                    <TouchableOpacity>
+                      <MaterialIcons name="favorite-border" size={20} color={colors.text.secondary} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <MaterialIcons name="play-arrow" size={20} color={colors.text.primary} />
+                    </TouchableOpacity>
+                  </View>
+                  <Button
+                    title="Select"
+                    variant="primary"
+                    size="small"
+                    style={styles.selectButton}
+                    onPress={() => {}}
+                  />
+                </View>
+              </Card>
+            ))}
           </View>
         </View>
       </ScrollView>
@@ -97,102 +185,146 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
   },
   scrollView: {
     flex: 1,
   },
   header: {
-    padding: 20,
-    backgroundColor: '#FFFFFF',
+    paddingHorizontal: Spacing[6],
+    paddingVertical: Spacing[4],
   },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 8,
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#6B7280',
-    lineHeight: 24,
+  headerTitle: {
+    fontSize: Typography.fontSize.xl,
+    fontWeight: Typography.fontWeight.bold,
   },
   section: {
-    padding: 20,
+    paddingHorizontal: Spacing[6],
+    marginBottom: Spacing[6],
+  },
+  upgradeCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  upgradeContent: {
+    flex: 1,
+  },
+  crownIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 193, 7, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing[3],
+  },
+  upgradeTitle: {
+    fontSize: Typography.fontSize.lg,
+    fontWeight: Typography.fontWeight.bold,
+    color: '#FFFFFF',
+    marginBottom: Spacing[1],
+  },
+  upgradeSubtitle: {
+    fontSize: Typography.fontSize.sm,
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginBottom: Spacing[4],
+  },
+  upgradeButton: {
+    backgroundColor: '#FFFFFF',
+    alignSelf: 'flex-start',
+  },
+  upgradeAvatars: {
+    // For user avatars
+  },
+  featuresGrid: {
+    gap: Spacing[4],
+  },
+  featureCard: {
+    marginBottom: Spacing[4],
+  },
+  featureContent: {
+    alignItems: 'flex-start',
+  },
+  featureIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing[3],
+  },
+  featureTitle: {
+    fontSize: Typography.fontSize.lg,
+    fontWeight: Typography.fontWeight.bold,
+    marginBottom: Spacing[2],
+  },
+  featureDescription: {
+    fontSize: Typography.fontSize.sm,
+    lineHeight: 20,
+    marginBottom: Spacing[4],
+  },
+  createButton: {
+    alignSelf: 'flex-start',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing[4],
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 16,
+    fontSize: Typography.fontSize.xl,
+    fontWeight: Typography.fontWeight.bold,
   },
-  grid: {
+  viewAllButton: {
+    fontSize: Typography.fontSize.sm,
+    fontWeight: Typography.fontWeight.medium,
+  },
+  voicesGrid: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
+    gap: Spacing[4],
   },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 20,
-    width: '48%',
+  voiceCard: {
+    flex: 1,
+  },
+  voiceContent: {
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  cardIcon: {
-    marginBottom: 12,
+  voiceAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing[3],
   },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
+  voiceAvatarText: {
+    color: '#FFFFFF',
+    fontSize: Typography.fontSize.lg,
+    fontWeight: Typography.fontWeight.bold,
+  },
+  voiceName: {
+    fontSize: Typography.fontSize.sm,
+    fontWeight: Typography.fontWeight.medium,
     textAlign: 'center',
+    marginBottom: Spacing[1],
   },
-  cardDescription: {
-    fontSize: 14,
-    color: '#6B7280',
+  voiceAge: {
+    fontSize: Typography.fontSize.xs,
     textAlign: 'center',
-    lineHeight: 20,
+    marginBottom: Spacing[3],
   },
-  statsGrid: {
+  voiceActions: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+    gap: Spacing[4],
+    marginBottom: Spacing[3],
   },
-  statCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    width: '48%',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  statNumber: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginTop: 8,
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 14,
-    color: '#6B7280',
-    textAlign: 'center',
+  selectButton: {
+    alignSelf: 'stretch',
   },
 });
 

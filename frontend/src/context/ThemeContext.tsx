@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Appearance } from 'react-native';
-import { Colors, Typography, BorderRadius, Shadows } from '../../../shared/design-system';
+import { Colors, Typography, Spacing, BorderRadius } from '../../../shared/design-system';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -43,8 +42,10 @@ export function useTheme() {
 }
 
 const getSystemColorScheme = (): 'light' | 'dark' => {
-  const colorScheme = Appearance.getColorScheme();
-  return colorScheme === 'dark' ? 'dark' : 'light';
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  return 'light';
 };
 
 const createThemeColors = (isDark: boolean): ThemeColors => ({
@@ -67,7 +68,7 @@ const createThemeColors = (isDark: boolean): ThemeColors => ({
   info: Colors.primary[500],
 });
 
-const STORAGE_KEY = '@VoicifyApp:theme';
+const STORAGE_KEY = 'voicify-theme';
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -84,24 +85,65 @@ export function ThemeProvider({
   const isDark = mode === 'dark' || (mode === 'system' && systemScheme === 'dark');
   const colors = createThemeColors(isDark);
 
-  // Load saved theme preference on app start (simplified for now)
+  // Load saved theme preference on app start
   useEffect(() => {
-    // For now, just use system theme
-    setMode('system');
+    const loadTheme = () => {
+      try {
+        const savedTheme = localStorage.getItem(STORAGE_KEY);
+        if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
+          setMode(savedTheme as ThemeMode);
+        }
+      } catch (error) {
+        console.warn('Failed to load theme preference:', error);
+      }
+    };
+    loadTheme();
   }, []);
 
   // Listen to system theme changes
   useEffect(() => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setSystemScheme(colorScheme === 'dark' ? 'dark' : 'light');
-    });
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = (e: MediaQueryListEvent) => {
+        setSystemScheme(e.matches ? 'dark' : 'light');
+      };
 
-    return () => subscription?.remove();
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
   }, []);
+
+  // Apply theme to document
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      
+      // Update CSS custom properties
+      root.style.setProperty('--color-primary', colors.primary);
+      root.style.setProperty('--color-background', colors.background);
+      root.style.setProperty('--color-surface', colors.surface);
+      root.style.setProperty('--color-card', colors.card);
+      root.style.setProperty('--color-border', colors.border);
+      root.style.setProperty('--color-text-primary', colors.text.primary);
+      root.style.setProperty('--color-text-secondary', colors.text.secondary);
+      root.style.setProperty('--color-text-tertiary', colors.text.tertiary);
+      root.style.setProperty('--color-success', colors.success);
+      root.style.setProperty('--color-warning', colors.warning);
+      root.style.setProperty('--color-error', colors.error);
+      
+      // Update document class
+      root.classList.remove('light', 'dark');
+      root.classList.add(isDark ? 'dark' : 'light');
+    }
+  }, [colors, isDark]);
 
   const setTheme = (newMode: ThemeMode) => {
     setMode(newMode);
-    // TODO: Implement persistence later
+    try {
+      localStorage.setItem(STORAGE_KEY, newMode);
+    } catch (error) {
+      console.warn('Failed to save theme preference:', error);
+    }
   };
 
   const toggleTheme = () => {

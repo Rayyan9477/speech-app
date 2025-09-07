@@ -113,14 +113,22 @@ const EnhancedHome: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          AI Language Processor
+    <div className="space-y-12 max-w-7xl mx-auto bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen">
+      {/* Hero Section */}
+      <div className="text-center pt-16 pb-12 px-6">
+        <div className="mb-6">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-[#5546FF] to-[#7D8BFF] rounded-2xl mb-6">
+            <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+            </svg>
+          </div>
+        </div>
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-[#5546FF] to-[#7D8BFF] bg-clip-text text-transparent mb-6">
+          Voicify
         </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Advanced speech processing with voice cloning, ultra-realistic TTS, 
-          and seamless translation powered by state-of-the-art AI models
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          Transform your voice with AI-powered speech processing. Experience ultra-realistic TTS, 
+          voice cloning, and seamless translation powered by cutting-edge models.
         </p>
       </div>
 

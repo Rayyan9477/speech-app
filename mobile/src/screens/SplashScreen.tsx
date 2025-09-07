@@ -10,170 +10,123 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '../lib/theme-provider';
+import { Colors, Typography, Spacing } from '../../../shared/design-system';
 
 const { width, height } = Dimensions.get('window');
 
 const SplashScreen = () => {
   const navigation = useNavigation();
+  const { isDark } = useTheme();
   const logoScale = new Animated.Value(0);
-  const logoRotate = new Animated.Value(0);
   const textOpacity = new Animated.Value(0);
-  const pulseValue = new Animated.Value(1);
+  const spinnerOpacity = new Animated.Value(0);
+  const spinnerRotation = new Animated.Value(0);
 
   useEffect(() => {
     startAnimation();
-    checkUserStatus();
+    navigateToWalkthrough();
   }, []);
 
   const startAnimation = () => {
-    // Logo animation
-    Animated.sequence([
-      Animated.timing(logoScale, {
-        toValue: 1,
-        duration: 1200,
-        useNativeDriver: true,
-      }),
+    // Logo appears first
+    Animated.timing(logoScale, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+
+    // Text appears after logo
+    setTimeout(() => {
       Animated.timing(textOpacity, {
         toValue: 1,
-        duration: 800,
+        duration: 600,
         useNativeDriver: true,
-      }),
-    ]).start();
+      }).start();
+    }, 300);
 
-    // Continuous pulse animation
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseValue, {
-          toValue: 1.05,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseValue, {
-          toValue: 1,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-
-    // Rotation animation
-    Animated.loop(
-      Animated.timing(logoRotate, {
+    // Spinner appears last with rotation
+    setTimeout(() => {
+      Animated.timing(spinnerOpacity, {
         toValue: 1,
-        duration: 8000,
+        duration: 400,
         useNativeDriver: true,
-      })
-    ).start();
+      }).start();
+
+      // Start spinner rotation
+      Animated.loop(
+        Animated.timing(spinnerRotation, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        })
+      ).start();
+    }, 800);
   };
 
-  const checkUserStatus = async () => {
-    setTimeout(async () => {
-      try {
-        const hasSeenWalkthrough = await AsyncStorage.getItem('hasSeenWalkthrough');
-        const authToken = await AsyncStorage.getItem('authToken');
-
-        if (authToken) {
-          navigation.navigate('MainTabs' as never);
-        } else if (hasSeenWalkthrough) {
-          navigation.navigate('Welcome' as never);
-        } else {
-          navigation.navigate('Walkthrough' as never);
-        }
-      } catch (error) {
-        console.error('Error checking user status:', error);
-        navigation.navigate('Welcome' as never);
-      }
-    }, 3000);
+  const navigateToWalkthrough = () => {
+    setTimeout(() => {
+      navigation.navigate('Walkthrough' as never);
+    }, 2500);
   };
 
-  const spin = logoRotate.interpolate({
+  const spin = spinnerRotation.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
   });
 
   return (
     <View style={styles.container}>
-      <StatusBar hidden />
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <LinearGradient
-        colors={['#1e1b4b', '#7c3aed', '#1e1b4b']}
+        colors={Colors.gradients.background}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={styles.gradient}
       >
-        {/* Background particles */}
-        <View style={styles.particlesContainer}>
-          {Array.from({ length: 20 }).map((_, index) => (
-            <Animated.View
-              key={index}
-              style={[
-                styles.particle,
-                {
-                  left: Math.random() * width,
-                  top: Math.random() * height,
-                  opacity: Math.random() * 0.3,
-                },
-              ]}
-            />
-          ))}
-        </View>
-
-        {/* Main logo */}
-        <Animated.View style={[
-          styles.logoContainer,
-          {
-            transform: [
-              { scale: Animated.multiply(logoScale, pulseValue) },
-              { rotate: spin },
-            ],
-          },
-        ]}>
-          <LinearGradient
-            colors={['#a855f7', '#ec4899', '#3b82f6']}
-            style={styles.logoCircle}
-          >
-            <View style={styles.logoInner}>
-              <MaterialIcons name="mic" size={48} color="white" />
-            </View>
-          </LinearGradient>
-
-          {/* Floating elements */}
-          <Animated.View style={[styles.floatingElement, styles.sparkle]}>
-            <MaterialIcons name="auto-awesome" size={16} color="#fbbf24" />
-          </Animated.View>
-
-          <Animated.View style={[styles.floatingElement, styles.wave]}>
-            <MaterialIcons name="volume-up" size={12} color="#06b6d4" />
-          </Animated.View>
-        </Animated.View>
-
-        {/* App title */}
-        <Animated.View style={[styles.textContainer, { opacity: textOpacity }]}>
-          <Text style={styles.title}>Voicify</Text>
-          <Text style={styles.subtitle}>Transform Your Voice</Text>
-        </Animated.View>
-
-        {/* Loading indicator */}
-        <Animated.View style={[styles.loadingContainer, { opacity: textOpacity }]}>
-          <View style={styles.loadingDots}>
-            {[0, 1, 2].map((index) => (
-              <Animated.View
-                key={index}
-                style={[
-                  styles.dot,
-                  {
-                    opacity: logoScale.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0.3, 1],
-                    }),
-                  },
-                ]}
-              />
-            ))}
+        {/* Voicify Logo Icon */}
+        <Animated.View
+          style={[
+            styles.logoContainer,
+            {
+              transform: [{ scale: logoScale }],
+            },
+          ]}
+        >
+          <View style={styles.logoIconContainer}>
+            <View style={styles.soundBar} />
+            <View style={[styles.soundBar, styles.soundBar2]} />
+            <View style={[styles.soundBar, styles.soundBar3]} />
+            <View style={[styles.soundBar, styles.soundBar4]} />
+            <View style={[styles.soundBar, styles.soundBar5]} />
+            <View style={[styles.soundBar, styles.soundBar6]} />
+            <View style={[styles.soundBar, styles.soundBar7]} />
           </View>
         </Animated.View>
 
-        {/* Version info */}
-        <Animated.View style={[styles.versionContainer, { opacity: textOpacity }]}>
-          <Text style={styles.version}>Version 1.0.0</Text>
+        {/* App Title */}
+        <Animated.View
+          style={[
+            styles.titleContainer,
+            { opacity: textOpacity },
+          ]}
+        >
+          <Text style={styles.title}>Voicify</Text>
+        </Animated.View>
+
+        {/* Loading Spinner */}
+        <Animated.View
+          style={[
+            styles.spinnerContainer,
+            { opacity: spinnerOpacity },
+          ]}
+        >
+          <Animated.View
+            style={[
+              styles.spinner,
+              { transform: [{ rotate: spin }] },
+            ]}
+          />
         </Animated.View>
       </LinearGradient>
     </View>
@@ -188,109 +141,65 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  particlesContainer: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-  },
-  particle: {
-    position: 'absolute',
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: 'white',
+    paddingHorizontal: Spacing[6],
   },
   logoContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 32,
+    marginBottom: Spacing[20],
   },
-  logoCircle: {
-    width: 128,
-    height: 128,
-    borderRadius: 64,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.44,
-    shadowRadius: 10.32,
-    elevation: 16,
+  logoIconContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 4,
   },
-  logoInner: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  floatingElement: {
-    position: 'absolute',
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sparkle: {
-    top: -8,
-    right: -8,
-    width: 32,
-    height: 32,
-    backgroundColor: 'rgba(251, 191, 36, 0.9)',
-  },
-  wave: {
-    bottom: -8,
-    left: -8,
-    width: 24,
+  soundBar: {
+    width: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
     height: 24,
-    backgroundColor: 'rgba(6, 182, 212, 0.9)',
   },
-  textContainer: {
+  soundBar2: {
+    height: 40,
+  },
+  soundBar3: {
+    height: 56,
+  },
+  soundBar4: {
+    height: 72,
+  },
+  soundBar5: {
+    height: 56,
+  },
+  soundBar6: {
+    height: 40,
+  },
+  soundBar7: {
+    height: 24,
+  },
+  titleContainer: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: Spacing[32],
   },
   title: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: Typography.fontSize['5xl'],
+    fontWeight: Typography.fontWeight.bold,
+    color: '#FFFFFF',
     textAlign: 'center',
-    marginBottom: 8,
-    letterSpacing: 2,
+    letterSpacing: 1,
   },
-  subtitle: {
-    fontSize: 20,
-    color: 'rgba(255, 255, 255, 0.8)',
-    textAlign: 'center',
-    fontWeight: '300',
-  },
-  loadingContainer: {
+  spinnerContainer: {
     position: 'absolute',
-    bottom: 80,
+    bottom: 120,
     alignItems: 'center',
   },
-  loadingDots: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
-    marginHorizontal: 4,
-  },
-  versionContainer: {
-    position: 'absolute',
-    bottom: 32,
-    alignItems: 'center',
-  },
-  version: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.5)',
+  spinner: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderTopColor: '#FFFFFF',
   },
 });
 

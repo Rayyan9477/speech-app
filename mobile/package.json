@@ -54,7 +54,9 @@
     "react-native-picker-select": "^8.1.0",
     "react-native-image-picker": "^7.1.0",
     "react-native-fs": "^2.20.0",
-    "react-native-share": "^10.0.2"
+    "react-native-share": "^10.0.2",
+    "@react-native-community/slider": "^4.4.2",
+    "framer-motion": "^10.16.16"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
