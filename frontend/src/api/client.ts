@@ -56,9 +56,38 @@ export interface VoiceSynthesisResponse {
 
 class ApiClient {
   private baseURL: string;
+  private token: string | null = null;
 
   constructor() {
     this.baseURL = `${API_BASE_URL}${API_PREFIX}`;
+  }
+
+  setAuthToken(token: string | null) {
+    this.token = token;
+  }
+
+  private async request(endpoint: string, options: RequestInit = {}): Promise<any> {
+    const url = `${this.baseURL}${endpoint}`;
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    };
+
+    if (this.token) {
+      headers['Authorization'] = `Bearer ${this.token}`;
+    }
+
+    const response = await fetch(url, {
+      ...options,
+      headers,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ detail: 'Request failed' }));
+      throw new Error(errorData.detail || `HTTP ${response.status}`);
+    }
+
+    return response.json();
   }
 
   // Speech-to-Text endpoints
@@ -302,6 +331,81 @@ class ApiClient {
     }
 
     return response.json();
+  }
+
+  // Authentication endpoints
+  async login(usernameOrEmail: string, password: string): Promise<{
+    access_token: string;
+    refresh_token: string;
+    token_type: string;
+    expires_in: number;
+    user: any;
+  }> {
+    const response = await fetch(`${this.baseURL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username_or_email: usernameOrEmail,
+        password,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Login failed: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  async register(userData: {
+    username: string;
+    email: string;
+    password: string;
+    first_name: string;
+    last_name: string;
+  }): Promise<any> {
+    const response = await fetch(`${this.baseURL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Registration failed: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  async logout(): Promise<any> {
+    return this.request('/auth/logout', {
+      method: 'POST',
+    });
+  }
+
+  async getCurrentUser(): Promise<any> {
+    return this.request('/auth/me');
+  }
+
+  async updateUser(userData: Partial<any>): Promise<any> {
+    return this.request('/auth/me', {
+      method: 'PUT',
+      body: JSON.stringify(userData),
+    });
+  }
+
+  async changePassword(currentPassword: string, newPassword: string): Promise<any> {
+    return this.request('/auth/me/password', {
+      method: 'PUT',
+      body: JSON.stringify({
+        current_password: currentPassword,
+        new_password: newPassword,
+      }),
+    });
   }
 
   // General endpoints

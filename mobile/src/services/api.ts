@@ -4,7 +4,7 @@ import offlineStorage from './offlineStorage';
 import networkService from './networkService';
 
 // API Configuration
-const API_BASE_URL = 'http://localhost:8000'; // Update with your backend URL
+const API_BASE_URL = 'http://localhost:8000/api/v1'; // Update with your backend URL
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -43,18 +43,22 @@ api.interceptors.response.use(
 
 // Auth API
 export const authAPI = {
-  login: async (email: string, password: string) => {
-    const response = await api.post('/auth/login', { email, password });
+  login: async (usernameOrEmail: string, password: string) => {
+    const response = await api.post('/auth/login', {
+      username_or_email: usernameOrEmail,
+      password
+    });
     return response.data;
   },
 
-  signup: async (userData: {
-    firstName: string;
-    lastName: string;
+  register: async (userData: {
+    username: string;
     email: string;
     password: string;
+    first_name: string;
+    last_name: string;
   }) => {
-    const response = await api.post('/auth/signup', userData);
+    const response = await api.post('/auth/register', userData);
     return response.data;
   },
 
@@ -63,26 +67,57 @@ export const authAPI = {
     return response.data;
   },
 
-  refreshToken: async () => {
-    const response = await api.post('/auth/refresh');
+  refreshToken: async (refreshToken: string) => {
+    const response = await api.post('/auth/refresh', {
+      refresh_token: refreshToken
+    });
+    return response.data;
+  },
+
+  getCurrentUser: async () => {
+    const response = await api.get('/auth/me');
+    return response.data;
+  },
+
+  updateUser: async (userData: any) => {
+    const response = await api.put('/auth/me', userData);
+    return response.data;
+  },
+
+  changePassword: async (currentPassword: string, newPassword: string) => {
+    const response = await api.put('/auth/me/password', {
+      current_password: currentPassword,
+      new_password: newPassword
+    });
     return response.data;
   },
 };
 
 // TTS API
 export const ttsAPI = {
-  generateSpeech: async (data: {
+  synthesizeSpeech: async (data: {
     text: string;
-    voice: string;
-    speed: number;
-    pitch: number;
+    language?: string;
+    voice_style?: string;
+    emotion?: string;
+    speed?: number;
+    pitch?: number;
   }) => {
-    const response = await api.post('/tts/generate', data);
+    const response = await api.post('/tts/synthesize', data);
     return response.data;
   },
 
   getVoices: async () => {
     const response = await api.get('/tts/voices');
+    return response.data;
+  },
+
+  getAudioFile: (filename: string) => {
+    return `${API_BASE_URL}/tts/audio/${filename}`;
+  },
+
+  getSynthesisSession: async (sessionId: string) => {
+    const response = await api.get(`/tts/session/${sessionId}`);
     return response.data;
   },
 };

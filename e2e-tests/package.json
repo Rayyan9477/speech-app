@@ -14,8 +14,8 @@
     "test:cross-browser": "jest --testNamePattern='cross browser'",
     "start:test-servers": "concurrently \"npm run start:frontend\" \"npm run start:backend\" \"npm run start:mobile\"",
     "start:frontend": "cd ../frontend && npm run dev",
-    "start:backend": "cd ../backend && npm run dev",
-    "start:mobile": "cd ../mobile && npm run web",
+    "start:backend": "cd ../backend && python main.py",
+    "start:mobile": "cd ../mobile && npx expo start --web",
     "pretest": "npm run check:servers",
     "check:servers": "node scripts/check-servers.js"
   },

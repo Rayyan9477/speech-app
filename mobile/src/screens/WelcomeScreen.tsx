@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { motion } from 'framer-motion';
+// Note: Framer Motion is not fully compatible with React Native, using View instead
 
 const WelcomeScreen = () => {
   const navigation = useNavigation();
@@ -30,40 +30,17 @@ const WelcomeScreen = () => {
 
           {/* Animated elements */}
           <View style={styles.animationContainer}>
-            <motion.View
-              animate={{
-                y: [0, -10, 0],
-                rotate: [0, 5, 0],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-              style={styles.floatingIcon}
-            >
+            <View style={styles.floatingIcon}>
               <View style={styles.smallIcon}>
-                <MaterialIcons name="sparkles" size={16} color="white" />
+                <MaterialIcons name="star" size={16} color="white" />
               </View>
-            </motion.View>
+            </View>
 
-            <motion.View
-              animate={{
-                y: [0, 10, 0],
-                rotate: [0, -5, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 1,
-              }}
-              style={styles.floatingIcon2}
-            >
+            <View style={styles.floatingIcon2}>
               <View style={styles.smallIcon}>
                 <MaterialIcons name="mic" size={12} color="white" />
               </View>
-            </motion.View>
+            </View>
 
             <View style={styles.mainIcon}>
               <View style={styles.mainIconInner}>

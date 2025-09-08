@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, status, Depends, Request, Form
 from fastapi.security import HTTPAuthorizationCredentials
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from loguru import logger
 
 from ...database.user_models import User, UserRole, UserStatus, get_user_manager
@@ -22,7 +22,8 @@ class UserRegistration(BaseModel):
     first_name: str = Field(..., min_length=1, max_length=50)
     last_name: str = Field(..., min_length=1, max_length=50)
     
-    @validator('password')
+    @field_validator('password')
+    @classmethod
     def validate_password(cls, v):
         """Validate password complexity."""
         if not any(c.isupper() for c in v):
@@ -79,7 +80,8 @@ class PasswordChange(BaseModel):
     current_password: str
     new_password: str = Field(..., min_length=8, max_length=128)
     
-    @validator('new_password')
+    @field_validator('new_password')
+    @classmethod
     def validate_password(cls, v):
         """Validate password complexity."""
         if not any(c.isupper() for c in v):

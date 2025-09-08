@@ -186,7 +186,7 @@ const ProjectAnalytics = () => {
 
             <Card className="p-4">
               <div className="flex items-center space-x-2 mb-2">
-                <TrendingUpIcon className="w-5 h-5 text-orange-600" />
+                <ChartLineUpIcon className="w-5 h-5 text-orange-600" />
                 <span className="text-sm font-medium text-foreground">Engagement</span>
               </div>
               <div className="text-2xl font-bold text-foreground">{analytics.overview.engagement}%</div>

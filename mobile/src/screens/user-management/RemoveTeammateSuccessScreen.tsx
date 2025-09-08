@@ -37,7 +37,7 @@ const RemoveTeammateSuccessScreen = () => {
         {/* Success Animation */}
         <View style={styles.animationContainer}>
           <View style={styles.successCircle}>
-            <MaterialIcons name="check" size: 60, color="#FFFFFF" />
+            <MaterialIcons name="check" size={60} color="#FFFFFF" />
           </View>
         </View>
 

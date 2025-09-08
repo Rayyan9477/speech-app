@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   FlatList,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';

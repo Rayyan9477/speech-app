@@ -9,9 +9,11 @@ import {
   Alert,
   FlatList,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 const VoiceLibraryScreen = () => {
+  const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('myVoices');
   const [selectedVoices, setSelectedVoices] = useState<string[]>([]);
 
@@ -200,7 +202,7 @@ const VoiceLibraryScreen = () => {
         <Text style={styles.title}>Voice Library</Text>
         <TouchableOpacity
           style={styles.searchButton}
-          onPress={() => navigation.navigate('VoiceSearch')}
+          onPress={() => navigation.navigate('VoiceSearch' as any)}
         >
           <MaterialIcons name="search" size={24} color="#5546FF" />
         </TouchableOpacity>
@@ -244,7 +246,7 @@ const VoiceLibraryScreen = () => {
               <Text style={styles.sectionTitle}>Your Custom Voices</Text>
               <TouchableOpacity
                 style={styles.addButton}
-                onPress={() => navigation.navigate('VoiceCloningUpload')}
+                onPress={() => navigation.navigate('VoiceCloningUpload' as any)}
               >
                 <MaterialIcons name="add" size={20} color="#FFFFFF" />
                 <Text style={styles.addButtonText}>Add Voice</Text>

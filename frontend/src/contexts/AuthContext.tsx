@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { apiClient } from '../api/client';
 
 interface User {
   id: string;
@@ -38,8 +39,6 @@ interface RegisterData {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE_URL = 'http://localhost:8000/api/v1';
-
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -75,44 +74,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  // API request helper
-  const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
-    const url = `${API_BASE_URL}${endpoint}`;
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    };
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ detail: 'Request failed' }));
-      throw new Error(errorData.detail || `HTTP ${response.status}`);
-    }
-
-    return response.json();
-  };
+  // Set auth token in API client
+  useEffect(() => {
+    apiClient.setAuthToken(token);
+  }, [token]);
 
   const login = async (username: string, password: string) => {
     try {
       setIsLoading(true);
-      const response = await apiRequest('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({
-          username_or_email: username,
-          password,
-        }),
-      });
+      const response = await apiClient.login(username, password);
 
       const { access_token, user: userData } = response;
-      
+
       setToken(access_token);
       setUser(userData);
       localStorage.setItem('token', access_token);
@@ -128,9 +101,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async () => {
     try {
       if (token) {
-        await apiRequest('/auth/logout', {
-          method: 'POST',
-        });
+        await apiClient.logout();
       }
     } catch (error) {
       console.error('Logout request failed:', error);
@@ -145,10 +116,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (userData: RegisterData) => {
     try {
       setIsLoading(true);
-      await apiRequest('/auth/register', {
-        method: 'POST',
-        body: JSON.stringify(userData),
-      });
+      await apiClient.register(userData);
     } catch (error) {
       console.error('Registration failed:', error);
       throw error;
@@ -160,10 +128,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const updateUser = async (userData: Partial<User>) => {
     try {
       setIsLoading(true);
-      const response = await apiRequest('/auth/me', {
-        method: 'PUT',
-        body: JSON.stringify(userData),
-      });
+      const response = await apiClient.updateUser(userData);
 
       setUser(response);
       localStorage.setItem('user', JSON.stringify(response));
@@ -178,13 +143,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const changePassword = async (currentPassword: string, newPassword: string) => {
     try {
       setIsLoading(true);
-      await apiRequest('/auth/me/password', {
-        method: 'PUT',
-        body: JSON.stringify({
-          current_password: currentPassword,
-          new_password: newPassword,
-        }),
-      });
+      await apiClient.changePassword(currentPassword, newPassword);
 
       // Force logout after password change
       await logout();

@@ -1,0 +1,32 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/components/*": ["src/components/*"],
+      "@/screens/*": ["src/screens/*"],
+      "@/services/*": ["src/services/*"],
+      "@/types/*": ["src/types/*"],
+      "@/lib/*": ["src/lib/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "App.tsx",
+    "expo/AppEntry.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.test.tsx",
+    "**/*.spec.tsx"
+  ]
+}
