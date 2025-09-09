@@ -400,6 +400,18 @@ export function TTSProjectProvider({ children, initialProjectId }: TTSProjectPro
   }, [state]);
 
   // Load initial project
+  const loadProject = useCallback(async (projectId: string) => {
+    try {
+      const savedData = localStorage.getItem(`tts-project-${projectId}`);
+      if (savedData) {
+        const projectState = JSON.parse(savedData);
+        dispatch({ type: 'LOAD_PROJECT', payload: projectState });
+      }
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: 'Failed to load project' });
+    }
+  }, []);
+
   useEffect(() => {
     if (initialProjectId) {
       loadProject(initialProjectId);
@@ -505,17 +517,7 @@ export function TTSProjectProvider({ children, initialProjectId }: TTSProjectPro
     console.log('Project saved:', state.metadata.title);
   }, [state]);
 
-  const loadProject = useCallback(async (projectId: string) => {
-    try {
-      const savedData = localStorage.getItem(`tts-project-${projectId}`);
-      if (savedData) {
-        const projectState = JSON.parse(savedData);
-        dispatch({ type: 'LOAD_PROJECT', payload: projectState });
-      }
-    } catch (error) {
-      dispatch({ type: 'SET_ERROR', payload: 'Failed to load project' });
-    }
-  }, []);
+  // loadProject defined above for useEffect dependency ordering
 
   const resetProject = useCallback(() => {
     dispatch({ type: 'RESET_PROJECT' });

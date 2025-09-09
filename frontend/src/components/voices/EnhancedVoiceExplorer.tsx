@@ -502,7 +502,13 @@ const EnhancedVoiceExplorer: React.FC = () => {
         filters={state.filters}
         onFiltersChange={updateFilters}
         onClearFilters={clearFilters}
-        filterOptions={getFilterOptions()}
+        filterOptions={{
+          languages: getFilterOptions().languages.map(l => ({ value: l.code, label: l.name, count: l.count })),
+          genders: getFilterOptions().genders,
+          ageGroups: getFilterOptions().ageGroups,
+          categories: getFilterOptions().categories,
+          providers: getFilterOptions().providers,
+        }}
       />
 
       {/* Click outside to close sort menu */}

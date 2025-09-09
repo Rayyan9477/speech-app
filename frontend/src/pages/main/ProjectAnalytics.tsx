@@ -11,7 +11,7 @@ import {
   UsersIcon,
   PlayIcon,
   ArrowDownTrayIcon as DownloadIcon,
-  TrendingUpIcon as ChartLineUpIcon,
+  ChartBarIcon as ChartLineUpIcon,
   EyeIcon,
   HeartIcon,
   ShareIcon,

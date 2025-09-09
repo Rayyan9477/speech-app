@@ -62,37 +62,37 @@ const VoiceTranslationWorkflow: React.FC = () => {
             }}
             isUploading={state.isUploading}
             uploadProgress={state.uploadProgress}
-            uploadedFile={state.uploadedFile}
-            error={state.error}
+            uploadedFile={state.uploadedFile || undefined}
+            error={state.error || undefined}
           />
         );
       case 'language':
         return (
           <LanguageSelectionStep
             languages={state.availableLanguages}
-            selectedLanguage={state.selectedLanguage}
+            selectedLanguage={state.selectedLanguage || undefined}
             onLanguageSelect={(lang) => {
               // Selection is handled by context
             }}
-            sourceAudio={state.uploadedFile}
+            sourceAudio={state.uploadedFile || undefined}
           />
         );
       case 'voice':
         return (
           <TranslationVoiceSelectionStep
             voices={state.availableVoices}
-            selectedVoice={state.selectedVoice}
+            selectedVoice={state.selectedVoice || undefined}
             onVoiceSelect={(voice) => {
               // Selection is handled by context
             }}
-            targetLanguage={state.selectedLanguage}
-            sourceAudio={state.uploadedFile}
+            targetLanguage={state.selectedLanguage || undefined}
+            sourceAudio={state.uploadedFile || undefined}
           />
         );
       case 'processing':
         return (
           <TranslationProcessingStep
-            job={state.currentJob}
+            job={state.currentJob || undefined}
             progress={state.processingProgress}
             isProcessing={state.isProcessing}
           />
@@ -100,7 +100,7 @@ const VoiceTranslationWorkflow: React.FC = () => {
       case 'results':
         return (
           <TranslationResultsStep
-            job={state.currentJob}
+            job={state.currentJob || undefined}
             onDownload={async (jobId) => {
               console.log('Download:', jobId);
             }}

@@ -346,7 +346,7 @@ export function VoiceExplorerProvider({ children }: VoiceExplorerProviderProps) 
 
   // Save favorites to localStorage when they change
   useEffect(() => {
-    localStorage.setItem('voice-favorites', JSON.stringify([...state.favorites]));
+    localStorage.setItem('voice-favorites', JSON.stringify(Array.from(state.favorites)));
   }, [state.favorites]);
 
   // Apply filters and search when they change

@@ -27,6 +27,8 @@ interface ThemeContextType {
   mode: ThemeMode;
   isDark: boolean;
   colors: ThemeColors;
+  // Alias for backwards compatibility with components expecting `theme`
+  theme: ThemeColors;
   setTheme: (mode: ThemeMode) => void;
   toggleTheme: () => void;
 }
@@ -155,6 +157,7 @@ export function ThemeProvider({
     mode,
     isDark,
     colors,
+    theme: colors,
     setTheme,
     toggleTheme,
   };

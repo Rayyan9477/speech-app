@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Colors, Typography, BorderRadius, Shadows, Spacing } from '../../../shared/design-system';
+import { Colors, Typography, BorderRadius, Shadows, Spacing } from '../shared/design-system';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -27,6 +27,8 @@ interface ThemeColors {
 
 interface ThemeContextType {
   mode: ThemeMode;
+  // Alias for components expecting `theme` instead of `mode`
+  theme: ThemeMode;
   isDark: boolean;
   colors: ThemeColors;
   typography: typeof Typography;
@@ -136,6 +138,7 @@ export function ThemeProvider({
 
   const value: ThemeContextType = {
     mode,
+    theme: mode,
     isDark,
     colors,
     typography: Typography,

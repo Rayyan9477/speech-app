@@ -628,6 +628,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 16,
     paddingHorizontal: 24,
+    alignItems: 'center',
   },
   shareButtonText: {
     fontSize: 16,

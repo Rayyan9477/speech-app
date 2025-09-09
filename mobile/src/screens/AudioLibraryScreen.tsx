@@ -787,6 +787,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     marginTop: 8,
+    alignItems: 'flex-end',
   },
   gridDuration: {
     fontSize: 11,

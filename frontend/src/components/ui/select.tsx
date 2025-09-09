@@ -46,7 +46,7 @@ export const Select: React.FC<SelectProps> = ({
   );
 };
 
-export const SelectTrigger: React.FC<{ className?: string }> = ({ children, className }) => (
+export const SelectTrigger: React.FC<{ className?: string; children?: React.ReactNode }> = ({ children, className }) => (
   <div className={clsx('relative', className)}>
     {children}
   </div>

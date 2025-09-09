@@ -176,7 +176,7 @@ function voiceProcessingReducer(state: VoiceProcessingState, action: VoiceProces
         result: action.payload,
         progress: 100,
         completedAt: new Date()
-      } : null;
+      } : undefined;
 
       return {
         ...state,
@@ -192,7 +192,7 @@ function voiceProcessingReducer(state: VoiceProcessingState, action: VoiceProces
         status: 'failed' as const,
         error: action.payload,
         completedAt: new Date()
-      } : null;
+      } : undefined;
 
       return {
         ...state,

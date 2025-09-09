@@ -24,7 +24,7 @@ const SplashScreen = () => {
     return () => clearTimeout(timer);
   }, [navigate]);
 
-  const logoVariants = {
+  const logoVariants: any = {
     hidden: { 
       scale: 0,
       rotate: -180,
@@ -43,7 +43,7 @@ const SplashScreen = () => {
     }
   };
 
-  const textVariants = {
+  const textVariants: any = {
     hidden: { 
       y: 30,
       opacity: 0 
@@ -59,7 +59,7 @@ const SplashScreen = () => {
     }
   };
 
-  const pulseVariants = {
+  const pulseVariants: any = {
     initial: { scale: 1 },
     pulse: {
       scale: [1, 1.05, 1],

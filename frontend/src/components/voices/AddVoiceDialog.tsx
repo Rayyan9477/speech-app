@@ -165,7 +165,12 @@ const AddVoiceDialog: React.FC = () => {
   const handleSave = async () => {
     const audioSource = uploadedFile || recordedAudio;
     if (audioSource && formData.name && formData.gender && formData.language && formData.ageGroup) {
-      await createVoice(formData, audioSource);
+      await createVoice({
+        name: formData.name,
+        gender: (formData.gender || 'Other') as 'Male' | 'Female' | 'Other',
+        language: formData.language,
+        ageGroup: (formData.ageGroup || 'Young') as 'Young' | 'Middle-Aged' | 'Senior',
+      }, audioSource);
       hideAddVoiceDialog();
       setFormData({ name: '', language: '', gender: '', ageGroup: '' });
       setUploadedFile(null);

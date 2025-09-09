@@ -14,7 +14,7 @@ import {
   ClockIcon,
   CheckCircleIcon,
   EyeIcon,
-  MessageCircleIcon,
+  ChatBubbleLeftRightIcon as MessageCircleIcon,
   PaperAirplaneIcon,
   Cog6ToothIcon
 } from '@heroicons/react/24/outline';

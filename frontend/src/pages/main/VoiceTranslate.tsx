@@ -63,7 +63,7 @@ const VoiceTranslate = () => {
     setIsTranslating(true);
     // Simulate translation
     setTimeout(() => {
-      const translations = {
+      const translations: Record<string, string> = {
         'Spanish': 'Hola, ¿cómo estás hoy? Espero que estés bien.',
         'French': 'Bonjour, comment allez-vous aujourd\'hui ? J\'espère que vous allez bien.',
         'German': 'Hallo, wie geht es Ihnen heute? Ich hoffe, es geht Ihnen gut.',

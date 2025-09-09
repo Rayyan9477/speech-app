@@ -170,9 +170,9 @@ const MultiStepSignUp = () => {
       setSignUpData(prev => ({
         ...prev,
         [parent]: {
-          ...prev[parent as keyof SignUpData],
+          ...(prev[parent as keyof SignUpData] as Record<string, unknown>),
           [child]: value
-        }
+        } as SignUpData["profile"]
       }));
     } else {
       setSignUpData(prev => ({

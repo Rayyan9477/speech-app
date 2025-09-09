@@ -14,9 +14,9 @@ import {
   MicrophoneIcon,
   SparklesIcon,
   ArrowPathIcon,
-  SaveIcon,
+  ArrowDownTrayIcon as SaveIcon,
   ShareIcon,
-  DownloadIcon
+  ArrowDownTrayIcon as DownloadIcon
 } from '@heroicons/react/24/outline';
 import {
   PlayIcon as PlayIconSolid,

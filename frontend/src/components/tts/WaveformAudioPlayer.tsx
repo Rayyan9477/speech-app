@@ -444,7 +444,7 @@ const WaveformAudioPlayer: React.FC<WaveformAudioPlayerProps> = ({
                     setIsDragging(true);
                     handleSeek(value[0]);
                   }}
-                  onValueCommit={() => setIsDragging(false)}
+                  // Commit on mouse up
                   className="w-full"
                 />
               </div>

@@ -31,9 +31,9 @@ export type RootStackParamList = {
 
   // Project Management
   EnhancedProjects: undefined;
-  ProjectDetail: { projectId: string };
+  ProjectDetail: { project: any };
   CreateProject: undefined;
-  EditProject: { projectId: string };
+  EditProject: { project: any };
   ProjectSearch: undefined;
 
   // Voice Search and Cloning

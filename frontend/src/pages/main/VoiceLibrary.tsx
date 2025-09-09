@@ -6,13 +6,13 @@ import { Badge } from '../../components/ui/badge';
 import { Input } from '../../components/ui/input';
 import { useTheme } from '../../lib/theme-provider';
 import {
-  SearchIcon,
-  FilterIcon,
+  MagnifyingGlassIcon as SearchIcon,
+  FunnelIcon as FilterIcon,
   PlayIcon,
   StarIcon,
-  DownloadIcon,
+  ArrowDownTrayIcon as DownloadIcon,
   ShareIcon,
-  MoreVerticalIcon,
+  EllipsisVerticalIcon as MoreVerticalIcon,
   SparklesIcon,
   ClockIcon,
   UserGroupIcon

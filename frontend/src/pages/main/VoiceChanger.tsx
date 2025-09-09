@@ -11,7 +11,7 @@ import {
   PauseIcon,
   SparklesIcon,
   AdjustmentsHorizontalIcon,
-  WaveformIcon,
+  ChartBarSquareIcon as WaveformIcon,
   SpeakerWaveIcon
 } from '@heroicons/react/24/outline';
 import {

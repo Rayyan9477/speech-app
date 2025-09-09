@@ -199,8 +199,7 @@ class NetworkService {
 
   // Cleanup
   cleanup(): void {
-    // Remove network listeners if needed
-    NetInfo.unsubscribe;
+    // TODO: Remove stored listeners if tracked
   }
 }
 

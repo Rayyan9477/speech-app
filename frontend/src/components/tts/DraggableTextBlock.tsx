@@ -95,7 +95,7 @@ const DraggableTextBlock: React.FC<DraggableTextBlockProps> = ({
     }
   }, [block.audioUrl, onPlay, onGenerateAudio]);
 
-  const blockVariants = {
+  const blockVariants: any = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
     visible: { 
       opacity: 1, 
@@ -111,7 +111,7 @@ const DraggableTextBlock: React.FC<DraggableTextBlockProps> = ({
     }
   };
 
-  const dragVariants = {
+  const dragVariants: any = {
     dragging: { 
       scale: 1.05, 
       rotate: 2,
